@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rail-Guard Schematic</title>
+<style>
+  body { margin: 0; padding: 20px; background: #e8e8e8; font-family: Arial, sans-serif; }
+  .wrap { background: white; display: inline-block; padding: 10px; border-radius: 6px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.25); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<svg width="1280" height="950" viewBox="0 0 1280 950" xmlns="http://www.w3.org/2000/svg" style="background:white;">
+<text x="640" y="28" font-family="Arial,sans-serif" font-size="17" font-weight="bold" fill="#1a3a6c" text-anchor="middle">Rail-Guard Project — As-Built Circuit Schematic</text>
+<text x="640" y="46" font-family="Arial,sans-serif" font-size="10" font-weight="normal" fill="#666" text-anchor="middle">ESP32-S3 Zero | Actual GPIO Pin Assignments</text>
+<line x1="40" y1="55" x2="1240" y2="55" stroke="#ccc" stroke-width="1"/>
+<rect x="500" y="280" width="170" height="410" fill="#c5dfff" stroke="#2255aa" stroke-width="2" rx="3"/>
+<text x="585" y="305" font-family="Arial,sans-serif" font-size="14" font-weight="bold" fill="#1a3a6c" text-anchor="middle">ESP32-S3</text>
+<text x="585" y="323" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#1a3a6c" text-anchor="middle">Zero</text>
+<line x1="520" y1="332" x2="650" y2="332" stroke="#2255aa" stroke-width="1"/>
+<line x1="540" y1="280" x2="540" y2="260" stroke="#cc0000" stroke-width="2"/>
+<line x1="540" y1="280" x2="540" y2="270" stroke="#cc0000" stroke-width="1.5"/>
+<polygon points="540,264 535,270 545,270" fill="#cc0000"/>
+<text x="540" y="262" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#cc0000" text-anchor="middle">5V</text>
+<line x1="585" y1="280" x2="585" y2="260" stroke="#333" stroke-width="2"/>
+<line x1="585" y1="260" x2="585" y2="268" stroke="#333" stroke-width="1.5"/>
+<line x1="577" y1="268" x2="593" y2="268" stroke="#333" stroke-width="1.5"/>
+<line x1="580" y1="272" x2="590" y2="272" stroke="#333" stroke-width="1.5"/>
+<line x1="583" y1="276" x2="587" y2="276" stroke="#333" stroke-width="1.5"/>
+<line x1="630" y1="280" x2="630" y2="260" stroke="#009933" stroke-width="2"/>
+<line x1="630" y1="280" x2="630" y2="270" stroke="#009933" stroke-width="1.5"/>
+<polygon points="630,264 625,270 635,270" fill="#009933"/>
+<text x="630" y="262" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#009933" text-anchor="middle">3V3</text>
+<text x="540" y="294" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#cc0000" text-anchor="middle">5V</text>
+<text x="585" y="294" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="middle">GND</text>
+<text x="630" y="294" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#009933" text-anchor="middle">3V3</text>
+<line x1="482" y1="360" x2="500" y2="360" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="360" r="2" fill="#555"/>
+<text x="505" y="364" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO2</text>
+<line x1="482" y1="400" x2="500" y2="400" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="400" r="2" fill="#555"/>
+<text x="505" y="404" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO3</text>
+<line x1="482" y1="440" x2="500" y2="440" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="440" r="2" fill="#555"/>
+<text x="505" y="444" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO4</text>
+<line x1="482" y1="480" x2="500" y2="480" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="480" r="2" fill="#555"/>
+<text x="505" y="484" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO5</text>
+<line x1="482" y1="520" x2="500" y2="520" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="520" r="2" fill="#555"/>
+<text x="505" y="524" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO6</text>
+<line x1="482" y1="560" x2="500" y2="560" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="560" r="2" fill="#555"/>
+<text x="505" y="564" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO7</text>
+<line x1="482" y1="600" x2="500" y2="600" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="600" r="2" fill="#555"/>
+<text x="505" y="604" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO8</text>
+<line x1="482" y1="640" x2="500" y2="640" stroke="#555" stroke-width="1.2"/>
+<circle cx="482" cy="640" r="2" fill="#555"/>
+<text x="505" y="644" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="start">GPIO9</text>
+<line x1="670" y1="360" x2="688" y2="360" stroke="#555" stroke-width="1.2"/>
+<circle cx="688" cy="360" r="2" fill="#555"/>
+<text x="665" y="364" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="end">GPIO10</text>
+<line x1="670" y1="400" x2="688" y2="400" stroke="#555" stroke-width="1.2"/>
+<circle cx="688" cy="400" r="2" fill="#555"/>
+<text x="665" y="404" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="end">GPIO11</text>
+<line x1="670" y1="440" x2="688" y2="440" stroke="#555" stroke-width="1.2"/>
+<circle cx="688" cy="440" r="2" fill="#555"/>
+<text x="665" y="444" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="end">GPIO12</text>
+<line x1="670" y1="480" x2="688" y2="480" stroke="#555" stroke-width="1.2"/>
+<circle cx="688" cy="480" r="2" fill="#555"/>
+<text x="665" y="484" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#444" text-anchor="end">GPIO13</text>
+<rect x="65" y="360" width="135" height="105" fill="#dceeff" stroke="#2255aa" stroke-width="2" rx="3"/>
+<text x="132" y="382" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1a3a6c" text-anchor="middle">MPU6050</text>
+<text x="132" y="398" font-family="Arial,sans-serif" font-size="10" font-weight="normal" fill="#333" text-anchor="middle">(MPU2)</text>
+<line x1="75" y1="407" x2="190" y2="407" stroke="#aaa" stroke-width="0.8"/>
+<text x="196" y="424" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">VCC</text>
+<line x1="200" y1="420" x2="208" y2="420" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="437" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">GND</text>
+<line x1="200" y1="433" x2="208" y2="433" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="451" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">SDA</text>
+<line x1="200" y1="447" x2="208" y2="447" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="464" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">SCL</text>
+<line x1="200" y1="460" x2="208" y2="460" stroke="#555" stroke-width="1.2"/>
+<line x1="208" y1="420" x2="208" y2="410" stroke="#009933" stroke-width="1.5"/>
+<polygon points="208,404 203,410 213,410" fill="#009933"/>
+<text x="208" y="402" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#009933" text-anchor="middle">3V3</text>
+<line x1="208" y1="433" x2="208" y2="441" stroke="#333" stroke-width="1.5"/>
+<line x1="200" y1="441" x2="216" y2="441" stroke="#333" stroke-width="1.5"/>
+<line x1="203" y1="445" x2="213" y2="445" stroke="#333" stroke-width="1.5"/>
+<line x1="206" y1="449" x2="210" y2="449" stroke="#333" stroke-width="1.5"/>
+<line x1="208" y1="447" x2="278" y2="447" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="278" y1="447" x2="278" y2="520" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="278" y1="520" x2="482" y2="520" stroke="#2255aa" stroke-width="1.5"/>
+<text x="283" y="517" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">SDA</text>
+<line x1="208" y1="460" x2="293" y2="460" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="293" y1="460" x2="293" y2="560" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="293" y1="560" x2="482" y2="560" stroke="#2255aa" stroke-width="1.5"/>
+<text x="298" y="557" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">SCL</text>
+<rect x="65" y="500" width="135" height="100" fill="#dceeff" stroke="#2255aa" stroke-width="2" rx="3"/>
+<text x="132" y="522" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1a3a6c" text-anchor="middle">HX711</text>
+<text x="132" y="538" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="middle">Load Amplifier</text>
+<line x1="75" y1="547" x2="190" y2="547" stroke="#aaa" stroke-width="0.8"/>
+<text x="196" y="562" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">VCC</text>
+<line x1="200" y1="558" x2="208" y2="558" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="575" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">GND</text>
+<line x1="200" y1="571" x2="208" y2="571" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="588" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">DT</text>
+<line x1="200" y1="584" x2="208" y2="584" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="601" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">SCK</text>
+<line x1="200" y1="597" x2="208" y2="597" stroke="#555" stroke-width="1.2"/>
+<line x1="208" y1="558" x2="208" y2="548" stroke="#cc0000" stroke-width="1.5"/>
+<polygon points="208,542 203,548 213,548" fill="#cc0000"/>
+<text x="208" y="540" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#cc0000" text-anchor="middle">5V</text>
+<line x1="208" y1="571" x2="208" y2="579" stroke="#333" stroke-width="1.5"/>
+<line x1="200" y1="579" x2="216" y2="579" stroke="#333" stroke-width="1.5"/>
+<line x1="203" y1="583" x2="213" y2="583" stroke="#333" stroke-width="1.5"/>
+<line x1="206" y1="587" x2="210" y2="587" stroke="#333" stroke-width="1.5"/>
+<line x1="208" y1="584" x2="308" y2="584" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="308" y1="584" x2="308" y2="440" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="308" y1="440" x2="482" y2="440" stroke="#2255aa" stroke-width="1.5"/>
+<text x="313" y="437" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">DT</text>
+<line x1="208" y1="597" x2="323" y2="597" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="323" y1="597" x2="323" y2="480" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="323" y1="480" x2="482" y2="480" stroke="#2255aa" stroke-width="1.5"/>
+<text x="328" y="477" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">SCK</text>
+<rect x="65" y="640" width="135" height="105" fill="#dceeff" stroke="#2255aa" stroke-width="2" rx="3"/>
+<text x="132" y="662" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1a3a6c" text-anchor="middle">MPU6050</text>
+<text x="132" y="678" font-family="Arial,sans-serif" font-size="10" font-weight="normal" fill="#333" text-anchor="middle">(MPU1)</text>
+<line x1="75" y1="687" x2="190" y2="687" stroke="#aaa" stroke-width="0.8"/>
+<text x="196" y="704" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">VCC</text>
+<line x1="200" y1="700" x2="208" y2="700" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="717" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">GND</text>
+<line x1="200" y1="713" x2="208" y2="713" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="731" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">SDA</text>
+<line x1="200" y1="727" x2="208" y2="727" stroke="#555" stroke-width="1.2"/>
+<text x="196" y="744" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="end">SCL</text>
+<line x1="200" y1="740" x2="208" y2="740" stroke="#555" stroke-width="1.2"/>
+<line x1="208" y1="700" x2="208" y2="690" stroke="#009933" stroke-width="1.5"/>
+<polygon points="208,684 203,690 213,690" fill="#009933"/>
+<text x="208" y="682" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#009933" text-anchor="middle">3V3</text>
+<line x1="208" y1="713" x2="208" y2="721" stroke="#333" stroke-width="1.5"/>
+<line x1="200" y1="721" x2="216" y2="721" stroke="#333" stroke-width="1.5"/>
+<line x1="203" y1="725" x2="213" y2="725" stroke="#333" stroke-width="1.5"/>
+<line x1="206" y1="729" x2="210" y2="729" stroke="#333" stroke-width="1.5"/>
+<line x1="208" y1="727" x2="338" y2="727" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="338" y1="727" x2="338" y2="600" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="338" y1="600" x2="482" y2="600" stroke="#2255aa" stroke-width="1.5"/>
+<text x="343" y="597" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">SDA</text>
+<line x1="208" y1="740" x2="353" y2="740" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="353" y1="740" x2="353" y2="640" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="353" y1="640" x2="482" y2="640" stroke="#2255aa" stroke-width="1.5"/>
+<text x="358" y="637" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">SCL</text>
+<rect x="350" y="775" width="240" height="180" fill="#fff0d5" stroke="#996600" stroke-width="2" rx="3"/>
+<text x="470" y="797" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#7a4c00" text-anchor="middle">L298N</text>
+<text x="470" y="813" font-family="Arial,sans-serif" font-size="10" font-weight="normal" fill="#7a4c00" text-anchor="middle">Motor Driver</text>
+<line x1="360" y1="821" x2="580" y2="821" stroke="#cc9900" stroke-width="0.8"/>
+<text x="586" y="836" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">12V+</text>
+<line x1="590" y1="832" x2="598" y2="832" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="849" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">GND</text>
+<line x1="590" y1="845" x2="598" y2="845" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="862" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">5V(logic)</text>
+<line x1="590" y1="858" x2="598" y2="858" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="875" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">ENA</text>
+<line x1="590" y1="871" x2="598" y2="871" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="888" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">ENB</text>
+<line x1="590" y1="884" x2="598" y2="884" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="901" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">IN1</text>
+<line x1="590" y1="897" x2="598" y2="897" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="914" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">IN2</text>
+<line x1="590" y1="910" x2="598" y2="910" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="927" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">IN3</text>
+<line x1="590" y1="923" x2="598" y2="923" stroke="#996600" stroke-width="1.2"/>
+<text x="586" y="940" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="end">IN4</text>
+<line x1="590" y1="936" x2="598" y2="936" stroke="#996600" stroke-width="1.2"/>
+<line x1="598" y1="832" x2="598" y2="822" stroke="#990000" stroke-width="1.5"/>
+<polygon points="598,816 593,822 603,822" fill="#990000"/>
+<text x="598" y="814" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#990000" text-anchor="middle">12V</text>
+<line x1="598" y1="845" x2="598" y2="853" stroke="#333" stroke-width="1.5"/>
+<line x1="590" y1="853" x2="606" y2="853" stroke="#333" stroke-width="1.5"/>
+<line x1="593" y1="857" x2="603" y2="857" stroke="#333" stroke-width="1.5"/>
+<line x1="596" y1="861" x2="600" y2="861" stroke="#333" stroke-width="1.5"/>
+<line x1="598" y1="858" x2="598" y2="848" stroke="#cc0000" stroke-width="1.5"/>
+<polygon points="598,842 593,848 603,848" fill="#cc0000"/>
+<text x="598" y="840" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#cc0000" text-anchor="middle">5V</text>
+<line x1="598" y1="871" x2="612" y2="871" stroke="#996600" stroke-width="1.5"/>
+<line x1="598" y1="884" x2="612" y2="884" stroke="#996600" stroke-width="1.5"/>
+<line x1="612" y1="871" x2="612" y2="884" stroke="#996600" stroke-width="2"/>
+<circle cx="612" cy="871" r="4" fill="#2255aa"/>
+<line x1="612" y1="871" x2="612" y2="762" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="612" y1="762" x2="368" y2="762" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="368" y1="762" x2="368" y2="360" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="368" y1="360" x2="482" y2="360" stroke="#2255aa" stroke-width="1.5"/>
+<text x="371" y="357" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">PWM</text>
+<line x1="598" y1="910" x2="638" y2="910" stroke="#333" stroke-width="1"/>
+<line x1="638" y1="910" x2="638" y2="918" stroke="#333" stroke-width="1.5"/>
+<line x1="630" y1="918" x2="646" y2="918" stroke="#333" stroke-width="1.5"/>
+<line x1="633" y1="922" x2="643" y2="922" stroke="#333" stroke-width="1.5"/>
+<line x1="636" y1="926" x2="640" y2="926" stroke="#333" stroke-width="1.5"/>
+<line x1="598" y1="897" x2="630" y2="897" stroke="#996600" stroke-width="1.5"/>
+<line x1="598" y1="923" x2="630" y2="923" stroke="#996600" stroke-width="1.5"/>
+<line x1="630" y1="897" x2="630" y2="923" stroke="#996600" stroke-width="2"/>
+<circle cx="630" cy="897" r="4" fill="#2255aa"/>
+<line x1="630" y1="897" x2="630" y2="750" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="630" y1="750" x2="383" y2="750" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="383" y1="750" x2="383" y2="400" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="383" y1="400" x2="482" y2="400" stroke="#2255aa" stroke-width="1.5"/>
+<text x="386" y="397" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="start">DIR</text>
+<line x1="598" y1="936" x2="655" y2="936" stroke="#333" stroke-width="1"/>
+<line x1="655" y1="936" x2="655" y2="944" stroke="#333" stroke-width="1.5"/>
+<line x1="647" y1="944" x2="663" y2="944" stroke="#333" stroke-width="1.5"/>
+<line x1="650" y1="948" x2="660" y2="948" stroke="#333" stroke-width="1.5"/>
+<line x1="653" y1="952" x2="657" y2="952" stroke="#333" stroke-width="1.5"/>
+<text x="355" y="849" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="start">OUT1</text>
+<line x1="342" y1="845" x2="350" y2="845" stroke="#996600" stroke-width="1.2"/>
+<text x="355" y="864" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="start">OUT2</text>
+<line x1="342" y1="860" x2="350" y2="860" stroke="#996600" stroke-width="1.2"/>
+<text x="355" y="889" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="start">OUT3</text>
+<line x1="342" y1="885" x2="350" y2="885" stroke="#996600" stroke-width="1.2"/>
+<text x="355" y="904" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#7a4c00" text-anchor="start">OUT4</text>
+<line x1="342" y1="900" x2="350" y2="900" stroke="#996600" stroke-width="1.2"/>
+<rect x="175" y="783" width="95" height="55" fill="#ffe8cc" stroke="#996600" stroke-width="2" rx="3"/>
+<text x="222" y="805" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7a4c00" text-anchor="middle">Motor 1</text>
+<text x="222" y="821" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#996600" text-anchor="middle">(+) (−)</text>
+<line x1="270" y1="803" x2="342" y2="845" stroke="#996600" stroke-width="1.2"/>
+<line x1="270" y1="818" x2="342" y2="860" stroke="#996600" stroke-width="1.2"/>
+<rect x="175" y="858" width="95" height="55" fill="#ffe8cc" stroke="#996600" stroke-width="2" rx="3"/>
+<text x="222" y="880" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#7a4c00" text-anchor="middle">Motor 2</text>
+<text x="222" y="896" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#996600" text-anchor="middle">(+) (−)</text>
+<line x1="270" y1="878" x2="342" y2="885" stroke="#996600" stroke-width="1.2"/>
+<line x1="270" y1="893" x2="342" y2="900" stroke="#996600" stroke-width="1.2"/>
+<rect x="840" y="300" width="140" height="135" fill="#dceeff" stroke="#2255aa" stroke-width="2" rx="3"/>
+<text x="910" y="322" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#1a3a6c" text-anchor="middle">SD Card</text>
+<text x="910" y="338" font-family="Arial,sans-serif" font-size="11" font-weight="normal" fill="#1a3a6c" text-anchor="middle">Reader</text>
+<line x1="850" y1="346" x2="970" y2="346" stroke="#aaa" stroke-width="0.8"/>
+<text x="845" y="361" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">VCC</text>
+<line x1="832" y1="357" x2="840" y2="357" stroke="#555" stroke-width="1.2"/>
+<text x="845" y="374" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">GND</text>
+<line x1="832" y1="370" x2="840" y2="370" stroke="#555" stroke-width="1.2"/>
+<text x="845" y="387" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">CS</text>
+<line x1="832" y1="383" x2="840" y2="383" stroke="#555" stroke-width="1.2"/>
+<text x="845" y="401" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MOSI</text>
+<line x1="832" y1="397" x2="840" y2="397" stroke="#555" stroke-width="1.2"/>
+<text x="845" y="414" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">SCK</text>
+<line x1="832" y1="410" x2="840" y2="410" stroke="#555" stroke-width="1.2"/>
+<text x="845" y="427" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MISO</text>
+<line x1="832" y1="423" x2="840" y2="423" stroke="#555" stroke-width="1.2"/>
+<line x1="832" y1="357" x2="832" y2="347" stroke="#009933" stroke-width="1.5"/>
+<polygon points="832,341 827,347 837,347" fill="#009933"/>
+<text x="832" y="339" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#009933" text-anchor="middle">3V3</text>
+<line x1="832" y1="370" x2="832" y2="378" stroke="#333" stroke-width="1.5"/>
+<line x1="824" y1="378" x2="840" y2="378" stroke="#333" stroke-width="1.5"/>
+<line x1="827" y1="382" x2="837" y2="382" stroke="#333" stroke-width="1.5"/>
+<line x1="830" y1="386" x2="834" y2="386" stroke="#333" stroke-width="1.5"/>
+<line x1="832" y1="383" x2="718" y2="383" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="718" y1="383" x2="718" y2="360" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="718" y1="360" x2="688" y2="360" stroke="#2255aa" stroke-width="1.5"/>
+<text x="714" y="357" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="end">CS</text>
+<line x1="832" y1="397" x2="733" y2="397" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="733" y1="397" x2="733" y2="400" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="733" y1="400" x2="688" y2="400" stroke="#2255aa" stroke-width="1.5"/>
+<text x="729" y="397" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="end">MOSI</text>
+<line x1="832" y1="410" x2="748" y2="410" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="748" y1="410" x2="748" y2="440" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="748" y1="440" x2="688" y2="440" stroke="#2255aa" stroke-width="1.5"/>
+<text x="744" y="437" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="end">SCK</text>
+<line x1="832" y1="423" x2="763" y2="423" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="763" y1="423" x2="763" y2="480" stroke="#2255aa" stroke-width="1.5"/>
+<line x1="763" y1="480" x2="688" y2="480" stroke="#2255aa" stroke-width="1.5"/>
+<text x="759" y="477" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#555" text-anchor="end">MISO</text>
+<rect x="840" y="80" width="380" height="200" fill="#fff8e8" stroke="#996600" stroke-width="1.5" rx="3"/>
+<text x="1030" y="100" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#7a4c00" text-anchor="middle">Power Supply</text>
+<line x1="855" y1="108" x2="1205" y2="108" stroke="#cc9900" stroke-width="0.8"/>
+<rect x="860" y="120" width="110" height="55" fill="#ffe8e8" stroke="#990000" stroke-width="1.5" rx="3"/>
+<text x="915" y="142" font-family="Arial,sans-serif" font-size="13" font-weight="bold" fill="#990000" text-anchor="middle">12V</text>
+<text x="915" y="158" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#990000" text-anchor="middle">Power Adapter</text>
+<line x1="970" y1="142" x2="1005" y2="142" stroke="#990000" stroke-width="2"/>
+<polygon points="1005,136 1018,142 1005,148" fill="#990000"/>
+<rect x="1018" y="120" width="115" height="55" fill="#e8f0ff" stroke="#2255aa" stroke-width="1.5" rx="3"/>
+<text x="1075" y="142" font-family="Arial,sans-serif" font-size="11" font-weight="bold" fill="#1a3a6c" text-anchor="middle">XY-3606</text>
+<text x="1075" y="155" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#1a3a6c" text-anchor="middle">Buck Converter</text>
+<text x="1075" y="168" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#009900" text-anchor="middle">12V → 5V</text>
+<text x="1030" y="200" font-family="Arial,sans-serif" font-size="10" font-weight="bold" fill="#333" text-anchor="middle">Power Distribution:</text>
+<text x="1030" y="218" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#cc0000" text-anchor="middle">5V → ESP32, HX711, L298N logic</text>
+<text x="1030" y="233" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#009933" text-anchor="middle">3V3 → MPU1, MPU2, SD Card (from ESP32)</text>
+<text x="1030" y="248" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#990000" text-anchor="middle">12V → L298N motor supply (direct)</text>
+<text x="1030" y="263" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="middle">GND → common to all components</text>
+<rect x="840" y="500" width="380" height="310" fill="#f8f8f8" stroke="#999" stroke-width="1" rx="3"/>
+<text x="1030" y="520" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#333" text-anchor="middle">GPIO Pin Reference</text>
+<line x1="855" y1="528" x2="1205" y2="528" stroke="#999" stroke-width="0.8"/>
+<rect x="845" y="533" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="545" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO2</text>
+<text x="918" y="545" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">L298N ENA + ENB (PWM speed)</text>
+<rect x="845" y="553" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="565" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO3</text>
+<text x="918" y="565" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">L298N IN1 + IN3 (direction)</text>
+<rect x="845" y="573" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="585" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO4</text>
+<text x="918" y="585" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">HX711 DT (data)</text>
+<rect x="845" y="593" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="605" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO5</text>
+<text x="918" y="605" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">HX711 SCK (clock)</text>
+<rect x="845" y="613" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="625" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO6</text>
+<text x="918" y="625" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MPU2 SDA (I²C data)</text>
+<rect x="845" y="633" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="645" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO7</text>
+<text x="918" y="645" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MPU2 SCL (I²C clock)</text>
+<rect x="845" y="653" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="665" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO8</text>
+<text x="918" y="665" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MPU1 SDA (I²C data)</text>
+<rect x="845" y="673" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="685" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO9</text>
+<text x="918" y="685" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">MPU1 SCL (I²C clock)</text>
+<rect x="845" y="693" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="705" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO10</text>
+<text x="918" y="705" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">SD Card CS (chip select)</text>
+<rect x="845" y="713" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="725" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO11</text>
+<text x="918" y="725" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">SD Card MOSI (SPI data out)</text>
+<rect x="845" y="733" width="370" height="19" fill="#ffffff" rx="2"/>
+<text x="858" y="745" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO12</text>
+<text x="918" y="745" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">SD Card SCK (SPI clock)</text>
+<rect x="845" y="753" width="370" height="19" fill="#f0f4ff" rx="2"/>
+<text x="858" y="765" font-family="Arial,sans-serif" font-size="9" font-weight="bold" fill="#2255aa" text-anchor="start">GPIO13</text>
+<text x="918" y="765" font-family="Arial,sans-serif" font-size="9" font-weight="normal" fill="#333" text-anchor="start">SD Card MISO (SPI data in)</text>
+<text x="845" y="800" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#888" text-anchor="start">Notes: IN2 and IN4 tied to GND. ENB wired to ENA (GPIO2). IN3 wired to IN1 (GPIO3).</text>
+<rect x="5" y="5" width="1270" height="940" fill="none" stroke="#aaa" stroke-width="1.5" rx="4"/>
+<text x="640" y="942" font-family="Arial,sans-serif" font-size="8" font-weight="normal" fill="#aaa" text-anchor="middle">Rail-Guard Project by Mohit Sheth | IBDP | As-Built Schematic</text>
+</svg>
+</div>
+</body>
+</html>
