@@ -1,0 +1,5 @@
+Situations for Machine Learning Training:
+
+1. Normal - normal train passage
+2. Loose fishplate - vibration anomaly
+3. Cracked fishplate - structural failure signature
