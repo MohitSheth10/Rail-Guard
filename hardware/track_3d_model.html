@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rail-Guard Track — 3D Design</title>
+<style>
+  html, body { margin: 0; padding: 0; overflow: hidden; background: #1b1e24; font-family: Arial, Helvetica, sans-serif; }
+  #panel {
+    position: absolute; top: 16px; left: 16px; max-width: 400px;
+    background: rgba(16,18,23,0.94); color: #f2f2f2; padding: 20px 22px;
+    border-radius: 12px; font-size: 15px; line-height: 1.7; z-index: 10;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;
+  }
+  #panel h2 { margin: 0 0 10px 0; font-size: 19px; color: #fff; }
+  #panel h3 { margin: 18px 0 6px 0; font-size: 14px; color: #ffd479; text-transform: uppercase; letter-spacing: 0.6px; }
+  #panel .swatch { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:8px; vertical-align:middle; }
+  #panel ul { margin: 6px 0; padding-left: 20px; }
+  #panel li { margin-bottom: 7px; }
+  #panel .warn { color: #ffab7f; font-weight: bold; }
+  #panel .ok { color: #a3e6a8; }
+  #hint { position:absolute; bottom:14px; left:16px; color:#999; font-size:12px; z-index:10; }
+</style>
+</head>
+<body>
+
+<div id="panel">
+  <h2>Rail-Guard Track — 3D Design (v3)</h2>
+  <p>Drag to rotate · scroll to zoom · right-drag to pan. Yellow labels in the scene show real lengths.</p>
+
+  <h3>Confirmed by you</h3>
+  <ul>
+    <li class="ok">Each rail = 2 I-section pieces, 12in (1ft) each = 24in (2ft) total track length</li>
+    <li class="ok">Web height: 2 in · Bottom flange width: 2 in</li>
+    <li class="ok">Top flange (cart rides here): 2.1 cm ≈ 0.83 in</li>
+    <li class="ok">Fishplate: 4 in long, as thin as possible</li>
+    <li class="ok">Sleeper spacing: ~4 in (a bit more/less is fine)</li>
+    <li class="ok">Gauge (distance between the 2 rails): 4.25 in</li>
+    <li class="ok">Bolts: 4 in a single horizontal line, in pairs (. . &nbsp; . .), gap in the middle reserved for the MPU sensor mount (green outline)</li>
+  </ul>
+
+  <h3 class="warn">Still assumed — please confirm</h3>
+  <ul>
+    <li class="warn">Flange thickness: assumed 0.12 in (~3mm)</li>
+    <li class="warn">Web thickness: assumed 0.1 in (~2.5mm)</li>
+    <li class="warn">Fishplate thickness: assumed 0.06 in (~1.5mm, thinnest practical sheet steel)</li>
+    <li class="warn">Fishplate height: assumed 1.8 in (slightly less than web height)</li>
+    <li class="warn">Motor compartment (70x50x50mm box) is illustrative only</li>
+  </ul>
+</div>
+<div id="hint">Rail-Guard — track design v3</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ---------- Setup ----------
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1b1e24);
+
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 5000);
+camera.position.set(520, 340, 620);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.target.set(305, 0, 0);
+controls.update();
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.55));
+const dl = new THREE.DirectionalLight(0xffffff, 0.8);
+dl.position.set(300, 500, 400);
+scene.add(dl);
+const dl2 = new THREE.DirectionalLight(0xffffff, 0.35);
+dl2.position.set(-250, 150, -300);
+scene.add(dl2);
+
+const grid = new THREE.GridHelper(1000, 20, 0x444a54, 0x2c313a);
+grid.position.set(305, -70, 0);
+scene.add(grid);
+
+// ---------- Dimensions (mm), converted from your inch/cm spec ----------
+const IN = 25.4;
+const TRACK_LEN = 24 * IN;        // 24 in (2 ft) = 2x 12in pieces
+const HALF_LEN = 12 * IN;         // 12 in per I-section piece
+const GAUGE = 4.25 * IN;          // 4.25 in, CONFIRMED
+const WEB_H = 2 * IN;             // 2 in, CONFIRMED
+const BOT_W = 2 * IN;             // 2 in, CONFIRMED
+const TOP_W = 21;                 // 2.1 cm = 21mm, CONFIRMED
+const FLANGE_T = 3;               // assumed ~0.12in
+const WEB_T = 2.5;                // assumed ~0.1in
+const TOTAL_BEAM_H = WEB_H + 2*FLANGE_T;
+const JOINT_GAP = 2;              // tiny visual gap only
+
+const PLATE_L = 4 * IN;           // 4 in, CONFIRMED
+const PLATE_T = 1.5;              // "as thin as possible" - assumed
+const PLATE_H = 1.8 * IN;         // assumed, slightly less than web height
+const BOLT_SHAFT_R = 2.6, BOLT_HEAD_R = 5, BOLT_HEAD_H = 3;
+// 4 bolts in a single horizontal line, in pairs, with a gap in the middle for the MPU: . .   . .
+const BOLT_X_POSITIONS = [-36, -20, 20, 36];
+const MPU_GAP_W = 40; // the middle gap reserved for the MPU mount
+
+const SLEEPER_SPACING = 4 * IN;   // ~4in, CONFIRMED (approx)
+const SLEEPER_T = 16, SLEEPER_D = 24, SLEEPER_W = GAUGE + 90;
+
+const MOTOR_L = 70, MOTOR_W = 50, MOTOR_H = 50; // illustrative
+
+// ---------- Materials ----------
+const steelMat = new THREE.MeshStandardMaterial({ color: 0x9aa5ad, metalness: 0.6, roughness: 0.4 });
+const plateMat = new THREE.MeshStandardMaterial({ color: 0x5b6570, metalness: 0.65, roughness: 0.35 });
+const boltMat  = new THREE.MeshStandardMaterial({ color: 0x1c1c1c, metalness: 0.75, roughness: 0.3 });
+const woodMat  = new THREE.MeshStandardMaterial({ color: 0xc9a876, roughness: 0.85 });
+const motorMat = new THREE.MeshStandardMaterial({ color: 0xe08a3c, roughness: 0.6, transparent: true, opacity: 0.85 });
+
+// ---------- Asymmetric rail/I-beam cross-section (top flange != bottom flange) ----------
+function railBeamShape() {
+  const s = new THREE.Shape();
+  const hh = TOTAL_BEAM_H/2;
+  const topHW = TOP_W/2, botHW = BOT_W/2, webHT = WEB_T/2;
+  s.moveTo(-topHW, hh);
+  s.lineTo(topHW, hh);
+  s.lineTo(topHW, hh-FLANGE_T);
+  s.lineTo(webHT, hh-FLANGE_T);
+  s.lineTo(webHT, -hh+FLANGE_T);
+  s.lineTo(botHW, -hh+FLANGE_T);
+  s.lineTo(botHW, -hh);
+  s.lineTo(-botHW, -hh);
+  s.lineTo(-botHW, -hh+FLANGE_T);
+  s.lineTo(-webHT, -hh+FLANGE_T);
+  s.lineTo(-webHT, hh-FLANGE_T);
+  s.lineTo(-topHW, hh-FLANGE_T);
+  s.closePath();
+  return s;
+}
+
+function makeBeamSegment(length) {
+  const geo = new THREE.ExtrudeGeometry(railBeamShape(), { depth: length, bevelEnabled: false });
+  const mesh = new THREE.Mesh(geo, steelMat);
+  mesh.rotation.y = Math.PI / 2;
+  return mesh;
+}
+
+// ---------- Realistic fishplate silhouette (chamfered ends + bolt holes) ----------
+function fishplateShape() {
+  const s = new THREE.Shape();
+  const hl = PLATE_L/2, hh = PLATE_H/2, c = 6;
+  s.moveTo(-hl+c, hh);
+  s.lineTo(hl-c, hh);
+  s.lineTo(hl, hh-c);
+  s.lineTo(hl, -hh+c);
+  s.lineTo(hl-c, -hh);
+  s.lineTo(-hl+c, -hh);
+  s.lineTo(-hl, -hh+c);
+  s.lineTo(-hl, hh-c);
+  s.closePath();
+  BOLT_X_POSITIONS.forEach(bx => {
+    const hole = new THREE.Path();
+    hole.absarc(bx, 0, BOLT_SHAFT_R + 0.5, 0, Math.PI*2, false);
+    s.holes.push(hole);
+  });
+  return s;
+}
+
+function makeFishplate() {
+  const geo = new THREE.ExtrudeGeometry(fishplateShape(), { depth: PLATE_T, bevelEnabled: false });
+  geo.translate(0, 0, -PLATE_T/2);
+  return new THREE.Mesh(geo, plateMat);
+}
+
+function makeBoltAssembly(throughLength) {
+  const group = new THREE.Group();
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(BOLT_SHAFT_R, BOLT_SHAFT_R, throughLength, 14), boltMat);
+  shaft.rotation.x = Math.PI/2;
+  group.add(shaft);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(BOLT_HEAD_R, BOLT_HEAD_R, BOLT_HEAD_H, 6), boltMat);
+  head.rotation.x = Math.PI/2;
+  head.position.z = -throughLength/2 - BOLT_HEAD_H/2;
+  group.add(head);
+  const nut = new THREE.Mesh(new THREE.CylinderGeometry(BOLT_HEAD_R*0.92, BOLT_HEAD_R*0.92, BOLT_HEAD_H, 6), boltMat);
+  nut.rotation.x = Math.PI/2;
+  nut.position.z = throughLength/2 + BOLT_HEAD_H/2;
+  group.add(nut);
+  return group;
+}
+
+function buildRail(zPos) {
+  const group = new THREE.Group();
+  const seg1 = makeBeamSegment(HALF_LEN - JOINT_GAP/2);
+  seg1.position.set(0, 0, zPos);
+  group.add(seg1);
+  const seg2 = makeBeamSegment(HALF_LEN - JOINT_GAP/2);
+  seg2.position.set(HALF_LEN + JOINT_GAP/2, 0, zPos);
+  group.add(seg2);
+
+  const plateOffset = WEB_T/2 + PLATE_T/2 + 0.5;
+  [-plateOffset, plateOffset].forEach(zOff => {
+    const plate = makeFishplate();
+    plate.position.set(HALF_LEN, 0, zPos + zOff);
+    group.add(plate);
+  });
+
+  const boltThrough = 2*PLATE_T + WEB_T + 1;
+  BOLT_X_POSITIONS.forEach(bx => {
+    const bolt = makeBoltAssembly(boltThrough);
+    bolt.position.set(HALF_LEN + bx, 0, zPos);
+    group.add(bolt);
+  });
+
+  // MPU mount area marker — sits in the gap between the two pairs of bolts,
+  // on the outer face of the near-side fishplate
+  const mpuFaceZ = zPos + plateOffset + PLATE_T/2 + 0.3;
+  const mpuOutline = new THREE.LineLoop(
+    new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(HALF_LEN - MPU_GAP_W/2, -PLATE_H/2 + 4, mpuFaceZ),
+      new THREE.Vector3(HALF_LEN + MPU_GAP_W/2, -PLATE_H/2 + 4, mpuFaceZ),
+      new THREE.Vector3(HALF_LEN + MPU_GAP_W/2, PLATE_H/2 - 4, mpuFaceZ),
+      new THREE.Vector3(HALF_LEN - MPU_GAP_W/2, PLATE_H/2 - 4, mpuFaceZ),
+    ]),
+    new THREE.LineBasicMaterial({ color: 0x8fd694, depthTest: false })
+  );
+  mpuOutline.renderOrder = 999;
+  group.add(mpuOutline);
+
+  return group;
+}
+
+const railA = buildRail(-GAUGE/2);
+const railB = buildRail(GAUGE/2);
+scene.add(railA, railB);
+
+// ---------- Sleepers ----------
+const sleeperGeo = new THREE.BoxGeometry(SLEEPER_D, SLEEPER_T, SLEEPER_W);
+let sx = 0;
+while (sx <= TRACK_LEN + 0.01) {
+  const sleeper = new THREE.Mesh(sleeperGeo, woodMat);
+  sleeper.position.set(sx, -TOTAL_BEAM_H/2 - SLEEPER_T/2, 0);
+  scene.add(sleeper);
+  sx += SLEEPER_SPACING;
+}
+
+// ---------- Motor compartment (separate, optional, NOT attached) ----------
+const motorGeo = new THREE.BoxGeometry(MOTOR_L, MOTOR_H, MOTOR_W);
+const motorBox = new THREE.Mesh(motorGeo, motorMat);
+motorBox.position.set(-130, -TOTAL_BEAM_H/2 - MOTOR_H/2 + 5, 0);
+scene.add(motorBox);
+const motorEdges = new THREE.LineSegments(new THREE.EdgesGeometry(motorGeo), new THREE.LineBasicMaterial({ color: 0xffffff }));
+motorEdges.position.copy(motorBox.position);
+scene.add(motorEdges);
+
+// ================= DIMENSION LABELS IN THE 3D SCENE =================
+function makeLabel(text, color) {
+  const fontSize = 46;
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = `bold ${fontSize}px Arial`;
+  const w = ctx.measureText(text).width + 28;
+  canvas.width = w; canvas.height = fontSize*1.55;
+  ctx.font = `bold ${fontSize}px Arial`;
+  ctx.fillStyle = 'rgba(10,11,14,0.92)';
+  ctx.strokeStyle = color || '#ffd479';
+  ctx.lineWidth = 2;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.strokeRect(1,1,canvas.width-2,canvas.height-2);
+  ctx.fillStyle = color || '#ffd479';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 14, canvas.height/2);
+  const tex = new THREE.CanvasTexture(canvas);
+  const mat = new THREE.SpriteMaterial({ map: tex, depthTest: false });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(canvas.width*0.42, canvas.height*0.42, 1);
+  sprite.renderOrder = 999;
+  return sprite;
+}
+
+function addDimension(p1, p2, label, color, labelOffsetY) {
+  const c = color || 0xffd479;
+  const mat = new THREE.LineBasicMaterial({ color: c, depthTest: false, linewidth: 2 });
+  const geo = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...p1), new THREE.Vector3(...p2)]);
+  const line = new THREE.Line(geo, mat);
+  line.renderOrder = 999;
+  scene.add(line);
+  [p1, p2].forEach(p => {
+    const tick = new THREE.Mesh(new THREE.SphereGeometry(3, 8, 8), new THREE.MeshBasicMaterial({ color: c, depthTest: false }));
+    tick.position.set(...p);
+    tick.renderOrder = 999;
+    scene.add(tick);
+  });
+  const mid = [(p1[0]+p2[0])/2, (p1[1]+p2[1])/2 + (labelOffsetY||10), (p1[2]+p2[2])/2];
+  const sprite = makeLabel(label, colorToHex(c));
+  sprite.position.set(...mid);
+  scene.add(sprite);
+}
+
+function colorToHex(c) {
+  return '#' + new THREE.Color(c).getHexString();
+}
+
+const topY = TOTAL_BEAM_H + 55;
+// overall track length
+addDimension([0, topY, -GAUGE/2], [TRACK_LEN, topY, -GAUGE/2], '24 in (2 ft) track length', 0xffd479, 12);
+// each I-section piece length
+addDimension([0, topY-30, GAUGE/2+30], [HALF_LEN-1, topY-30, GAUGE/2+30], '12 in / piece', 0x8fd6ff, 10);
+addDimension([HALF_LEN+1, topY-30, GAUGE/2+30], [TRACK_LEN, topY-30, GAUGE/2+30], '12 in / piece', 0x8fd6ff, 10);
+// gauge
+addDimension([-40, 20, -GAUGE/2], [-40, 20, GAUGE/2], '4.25 in gauge', 0xff9d6c, 10);
+// fishplate length
+addDimension([HALF_LEN-PLATE_L/2, -TOTAL_BEAM_H/2-20, -GAUGE/2-25], [HALF_LEN+PLATE_L/2, -TOTAL_BEAM_H/2-20, -GAUGE/2-25], '4 in fishplate', 0x9be89b, 8);
+// sleeper spacing (first gap)
+addDimension([0, -TOTAL_BEAM_H/2-35, -SLEEPER_W/2-15], [SLEEPER_SPACING, -TOTAL_BEAM_H/2-35, -SLEEPER_W/2-15], '~4 in plank spacing', 0xc9a876, 8);
+// cross-section dims (at x=0 face)
+addDimension([-2, -TOTAL_BEAM_H/2, GAUGE/2-BOT_W/2], [-2, -TOTAL_BEAM_H/2, GAUGE/2+BOT_W/2], '2 in bottom flange', 0xffffff, -14);
+addDimension([-25, -TOTAL_BEAM_H/2, GAUGE/2], [-25, TOTAL_BEAM_H/2, GAUGE/2], '2 in web height', 0xffffff, 0);
+addDimension([-2, TOTAL_BEAM_H/2, GAUGE/2-TOP_W/2], [-2, TOTAL_BEAM_H/2, GAUGE/2+TOP_W/2], '2.1cm top (cart rides here)', 0x8fd694, 14);
+
+// ---------- Render loop ----------
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
