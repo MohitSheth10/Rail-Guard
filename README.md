@@ -43,6 +43,10 @@ The prototype has:
 
 The ESP32 can sample the accelerometer at about **1 kHz**, save the readings, and run an FFT to look at the vibration frequencies.
 
+![The rail, motor, and sensor board on the clamped bench rig](media/rig-photo.jpg)
+
+The rail and its fishplate joint on the left, the motor that stands in for a passing train at the bottom, and the ESP32 + sensor board on the right — soldered onto perfboard and wired up rather than breadboarded.
+
 ---
 
 ## Then things started going wrong
