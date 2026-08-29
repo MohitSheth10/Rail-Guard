@@ -2,7 +2,7 @@
 
 # Software
 
-Firmware lives in [`firmware/`](../firmware/). Analysis lives in
+Firmware and data-capture code live in [`code/`](../code/). Analysis lives in
 [`analysis/`](../analysis/).
 
 ---
@@ -10,57 +10,40 @@ Firmware lives in [`firmware/`](../firmware/). Analysis lives in
 ## Where it is
 
 Component bring-up is done. The accelerometer captures cleanly at a verified
-1000 Hz. Nothing yet turns that data into a decision — that's the work now.
+1000 Hz, and a full clamped-board dataset across every bolt state has now been
+collected (see the root [README](../README.md) and
+[`code/Accurate Readings/`](../code/Accurate%20Readings/)). Turning that data into
+a reliable, automatic tight/loose decision is the work still ahead.
 
-## The 1 kHz capture sketch
+## MPU bring-up sketch
 
-[`firmware/mpu6050_1khz_capture/`](../firmware/mpu6050_1khz_capture/)
+[`code/MPU_Test/MPU_Test.ino`](../code/MPU_Test/MPU_Test.ino) — the original
+bring-up sketch. Reads the accelerometer twice a second over the original GPIO 6/7
+wiring and prints it. Useless for vibration analysis, but it's the right first
+thing to run when checking whether a sensor is alive at all. Kept for that.
 
-Samples the accelerometer at 1000 Hz for a fixed burst, buffers it in RAM, dumps it
-as CSV, then reports on its own timing.
+**Note on this file:** the actual 1000 Hz capture firmware — the sketch that
+streams timestamped samples to the ESP32's serial port at close to 1000 Hz for
+[`daq.py`](../code/daq.py) to log — is not currently checked into this repository,
+only this earlier basic-test sketch is. That capture firmware exists on the device
+Mohit builds with but hasn't been added here yet. Adding it is on the to-do list
+below.
 
-**Why 1000 Hz.** That's the accelerometer's hardware ceiling. The gyro on the same
-chip runs at 8 kHz, but the accelerometer refreshes its registers exactly 1000 times
-a second. Reading faster returns the same numbers again, which adds nothing and
-corrupts an FFT.
+## SD card test
 
-**Getting there from 2 Hz** took four fixes, all of them necessary:
+[`code/SD_Card_Test/SDCardReaderTest.ino`](../code/SD_Card_Test/SDCardReaderTest.ino)
+— confirms the microSD module reads and writes before relying on it for logging.
 
-1. I2C bus to 400 kHz — the 100 kHz default has no headroom
-2. Enable the DLPF for a 1 kHz internal base rate, then `SMPLRT_DIV = 0`
-3. Absolute-deadline scheduling instead of `delay()`, so error doesn't accumulate
-4. Buffer the whole burst and print afterwards — printing during capture silently
-   wrecks the timing while leaving data that looks fine
+## Data capture (Python side)
 
-**It proves its own timing.** Every run ends with a report:
-
-```
-achieved rate (Hz) : 1000.xxx
-rate error (%)     : x.xxx
-  min / max / mean / std interval (us)
-dropped/short reads: 0
-VERDICT: PASS
-```
-
-FAIL if the rate is more than 2% off, if any interval runs 50% over the mean, or if
-a read dropped. The point is not to take the sample rate on trust.
-
-**Two guards** worth knowing about:
-
-- Startup reads `WHO_AM_I` and refuses to run on an unrecognised chip. It accepts
-  the 6050 (`0x68`), 6500 (`0x70`) and 9250 (`0x71`), and prints which one it found
-- A compile-time check catches the ESP32-S3 USB setting that sends `Serial` out the
-  UART pins and leaves the Serial Monitor silently blank
-
-There's also an I2C bus scan at startup, which is the fastest way to tell a wiring
-fault from a configuration one.
-
-## Earlier test sketch
-
-[`firmware/mpu6050_basic_test/`](../firmware/mpu6050_basic_test/) — the original
-bring-up sketch. Reads the accelerometer twice a second and prints it. Useless for
-vibration, but it's the right first thing to run when checking whether a sensor is
-alive at all. Kept for that.
+[`code/daq.py`](../code/daq.py) is the script actually used to record the datasets
+in `code/Accurate Readings/` and `code/Inaccurate Readings/`. It reads the
+ESP32's serial stream and saves it to a timestamped CSV, using the ESP32's own
+`micros()` timestamps as the timing reference and watching for stalled or
+off-rate sampling as it records. [`analysis/daq.py`](../analysis/daq.py) is an
+earlier, simpler version of the same idea, kept because the `analysis/` workflow
+still references it — see [`analysis/README.md`](../analysis/README.md) and
+[`code/README.md`](../code/README.md) for how the two differ.
 
 ## Analysis
 
@@ -74,36 +57,39 @@ properties and beam frequency from measured dimensions. Working explained in
 
 ### Small tasks
 
+- Add the actual 1000 Hz capture firmware sketch to the repo (see the note above)
 - Verify the HX711 reads the load cell
 - Calibrate the load cell against known weights
-- Confirm data over GPIO 4 / 5
+- Track down the timing/axis-recording glitch found in one of the 29 August
+baseline files (see [PROBLEMS.md](PROBLEMS.md) and the logbook)
 
 ### Main tasks, in order
 
-1. **Convert MPU data to a frequency.** Capture a burst to SD, pull it onto a
-   laptop, get the FFT right in Python where it can be plotted and checked, then
-   port the working method to the ESP32. Debugging signal processing through serial
-   prints on a microcontroller is slow and miserable.
+1. **Confirm the tight-vs-loose gap holds up.** The first clamped-board dataset
+shows a clean, consistent drop in vibration as more bolts go in, with badly loose
+(0–1 bolts) clearly separated from reasonably secure (3–4 bolts). The gap between
+3 and 4 bolts is not yet reliably separated — it's smaller than the normal
+run-to-run noise. More repeats are needed before trusting that split.
 
-2. **Tight vs loose.** Define exactly what "loose" means — how many turns of the
-   spanner — then run the cart 10 times tight and 10 times loose, logging every
-   run. Plot both. Write down the two averages and the gap between them. If there's
-   no gap, change one variable and go again.
+2. **Pick a threshold** that separates loose from tight, once the data supports one
+with some confidence. No threshold has been chosen yet.
 
-3. **Pick a threshold** that separates the two.
+3. **Auto-trigger.** Detect the cart or motor run starting from the vibration
+spike and use that to start the analysis automatically, rather than triggering by
+hand.
 
-4. **Auto-trigger.** Detect the cart arriving from the vibration spike and use that
-   to start the frequency calculation, rather than triggering by hand.
-
-5. **LED indicator.** On for loose, off for tight. Run the cart 10 times and count
-   how many it gets right. That score is the Phase 1 result.
+4. **LED indicator.** On for loose, off for tight. Run the test repeatedly and
+count how many it gets right.
 
 ### Then Phase 2
 
-Load cell and HX711 — get a raw reading, calibrate, log force alongside frequency,
-run both together.
+Load cell and HX711 — get a raw reading, calibrate, log force alongside
+vibration, run both together.
 
-Phases 3 (dataset and ML) and 4 (GPS) are out of scope for now.
+Phases 3 (a trained ML model) and 4 (GPS) are out of scope for now. No machine
+learning has been trained on this data yet — the current work is still about
+whether simple vibration statistics (like RMS) can separate the bolt states at
+all.
 
 ---
 

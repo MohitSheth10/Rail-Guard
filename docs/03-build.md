@@ -25,7 +25,7 @@ top the wheels run on.
 So I had them **weld a plate along the top** of each T-section. That turns it into
 something rail-shaped: wide base, thin web, flat head.
 
-![Rails as manufactured](../media/gif/track-manufactured.gif)
+[Video: the rails as manufactured](../media/videos/track-manufactured.mov)
 
 Two of these, 12 inches each, giving 24 inches of track total with a joint in the
 middle.
@@ -46,7 +46,7 @@ matter a lot when I came to calculate its natural frequency. Details in
 Steel plates, 4 inches long, drilled for four bolts — two into each rail end. They
 sit against the web on both sides of the joint, same as the real thing.
 
-![Fishplate joint](../media/img/track-fishplate-joint-closeup.jpg)
+![Fishplate joint](../media/photos/track-fishplate-joint-closeup.jpeg)
 
 You can see the weld bead running along the top of each rail in that photo, and the
 joint gap between the two rail ends. The bolts are what get loosened and tightened
@@ -57,12 +57,15 @@ during testing, so they're the actual subject of the experiment.
 Plywood, cut to take both rails at 4.25-inch gauge. Holes are drilled through the
 rail base flanges so they can be screwed down.
 
-**Mounted 8 August 2026.** I've left the screws out for now — the model is heavy
-enough that it doesn't shift much on its own, and being able to lift a rail off
-makes it easier to try different sensor positions. That'll change once testing
-settles down.
+**Mounted 8 August 2026.** I left the screws out at first, thinking the model was
+heavy enough that it wouldn't shift much on its own under vibration — and being
+able to lift a rail off made it easier to try different sensor positions. That
+turned out to be wrong: the board was creeping slightly with every run, which
+showed up later as a systematic error across a whole batch of readings (the
+board-drift problem — see [PROBLEMS.md](PROBLEMS.md)). It's now clamped down for
+every run instead of just resting on the bench.
 
-![Track on the base](../media/img/track-full-on-base.jpg)
+![Track on the base](../media/photos/track-full-on-base.jpeg)
 
 The base can be cut into separate planks later so it looks more like sleepers on
 ballast. Cosmetic, not urgent.
@@ -73,7 +76,8 @@ A four-wheel chassis with its own AA battery pack, running on the rails. It stan
 in for a train — enough weight and enough of a bump crossing the joint to set
 things vibrating.
 
-![Cart running on the track](../media/gif/cart-rolling-test.gif)
+[Video: cart rolling test 1](../media/videos/cart-rolling-test-01.mp4) ·
+[Video: cart rolling test 2](../media/videos/cart-rolling-test-02.mp4)
 
 It's not trying to be a scale model of anything. It just has to load the joint the
 same way every run, because repeatability is what the experiment depends on.
@@ -83,7 +87,8 @@ same way every run, because repeatability is what the experiment depends on.
 **8 August 2026** — mounted the motor directly onto one of the rails, so it can
 shake the track without needing the cart to roll. Steadier and more repeatable than
 pushing a cart by hand, and it means I can excite the rail on demand while testing
-the sensor.
+the sensor. This ended up being the vibration source used for the actual bolt-state
+data collection, with the cart kept as a secondary, more train-like test.
 
 ---
 

@@ -64,12 +64,10 @@ go back the same way every run or the data isn't comparable.
 
 | File | What it is |
 |---|---|
-| `RailGuard_Track_3D.html` | Interactive 3D model — open in a browser, drag to rotate |
-| `RailGuard_Track_Drawings.pdf` | Dimensioned drawings, sent to the fabricator |
-| `Rail Track Dimensions.pdf` | Reference dimensions for real track |
-| `Railway_Track_Specs_Reference.pptx` | Background on real rail sections |
-
-*(These live in the project folder; add them to the repo if you want them here.)*
+| [`hardware/track_3d_model.html`](../hardware/track_3d_model.html) | Interactive 3D model — open in a browser, drag to rotate |
+| [`hardware/track_drawings.pdf`](../hardware/track_drawings.pdf) | Dimensioned drawings, sent to the fabricator |
+| `Rail Track Dimensions.pdf` | Reference dimensions for real track — not in the repo yet |
+| `Railway_Track_Specs_Reference.pptx` | Background on real rail sections — not in the repo yet |
 
 ---
 
