@@ -1,80 +1,76 @@
-[← Back to main README](../README.md)
-
 # Analysis
+
+This is where I turn the ESP32's stream of numbers into data I can actually use.
+
+The folder currently contains two main scripts:
+
+- `daq.py` — records vibration data from the ESP32 and saves it for later
+- `natural_frequency.py` — calculates the rail's section properties and estimated natural frequency
+
+---
 
 ## `daq.py`
 
-Records the vibration stream from the ESP32-S3 over USB and saves it to a CSV file,
-so a test run can be studied afterwards instead of just scrolling past on screen.
+The ESP32 can print sensor values to the Serial Monitor, but watching numbers scroll past isn't very useful when running an experiment.
+
+`daq.py` records the data to CSV so a run can be looked at afterwards.
+
+### Running it
 
 ```bash
 python daq.py
 ```
 
-Needs `pyserial` (`pip install pyserial`). Set your board's COM port at the top of
-the file first.
+The script needs `pyserial`:
+
+```
+pip install pyserial
+```
+
+Set the board's COM port at the top of the file before running it.
 
 ### What it does
 
-- Reads roughly 1,000 lines a second from the board and writes every row to a
-  timestamped CSV (`capture_YYYYMMDD_HHMMSS.csv`).
-- Auto-detects the columns, so it works whether one or two accelerometers are streamed.
-- Shows a live, once-a-second readout of the row count and rate while it records.
-- Press `Ctrl+C` to stop; the file is flushed and closed cleanly, and it prints how
-  many rows were saved and the true sample rate.
+- Reads the vibration data coming from the ESP32
+- Saves each row to a timestamped CSV file
+- Works with the columns currently being sent by the board
+- Shows the number of rows and measured rate while recording
+- Flushes and closes the file cleanly when the capture is stopped
 
 ### First result
 
-The first captured run showed a clear jump in the spread of the accelerometer values
-the moment the motor started, against a flat, quiet baseline while it was stationary —
-the first real sign that the rig picks up the vibration it's meant to measure.
+The first proper capture showed a quiet signal while the setup was stationary and a clear increase in vibration when the motor started. That confirmed that the basic chain — sensor → ESP32 → computer → CSV — was actually working. It did not prove that the system could distinguish a tight joint from a loose one. That is what the controlled dataset is for.
+
+This `daq.py` is the simpler, earlier version of the logger. The one actually used to collect the datasets in `code/Accurate Readings/` and `code/Inaccurate Readings/` is [`code/daq.py`](../code/daq.py), which added stall detection and rate checking against the ESP32's own timing. See [`code/README.md`](../code/README.md) for how the two differ.
 
 ## `natural_frequency.py`
 
-Works out the section properties of the rail and its fundamental natural frequency
-for a range of spans and end conditions.
+This script came from my original plan. I initially thought the easiest way to detect a loose joint would be to look for a change in the rail's natural frequency. So I calculated it before doing the main experiment.
 
-```bash
+The calculation gave a frequency range of roughly 470 Hz to 17 kHz, depending on the rail support conditions.
+
+Then I checked the accelerometer's sampling limit. At about 1 kHz sampling, the useful frequency range ends around 500 Hz because of the Nyquist limit. That meant most of the frequencies I had calculated were outside what the sensor could reliably measure.
+
+That result changed the direction of the project. Instead of trying to measure the rail's full natural-frequency response, I started looking at the vibration and movement of the joint itself.
+
+### Running it
+
+```
 python3 natural_frequency.py
 ```
 
-No dependencies beyond the standard library.
+It uses only Python's standard library. The dimensions are set near the top of the file. The script distinguishes between measured/confirmed dimensions and dimensions that are still assumptions.
 
-### Using it
+The detailed working and reasoning are in [`docs/06-theory.md`](../docs/06-theory.md).
 
-Measure the rail with a vernier caliper and edit the five numbers at the top:
+## Current data
 
-```python
-TOP_FLANGE_WIDTH = 21.0     # confirmed
-BOT_FLANGE_WIDTH = 50.8     # confirmed
-WEB_HEIGHT       = 50.8     # confirmed
-FLANGE_THICKNESS = 3.0      # ASSUMED - measure this
-WEB_THICKNESS    = 2.5      # ASSUMED - measure this
-```
+The latest controlled data is in: [`../code/Accurate Readings/`](../code/Accurate%20Readings/)
 
-Two of those are still assumptions from the drawing, not measurements of the part.
-Until they're checked, treat the output as an estimate.
+Earlier runs are in: [`../code/Inaccurate Readings/`](../code/Inaccurate%20Readings/)
 
-### What it prints
+The older data is intentionally kept because it helped expose the board-movement problem. It should not be used as the main basis for the final tight-vs-loose conclusion.
 
-- Area, centroid height, second moment of area
-- Mass per metre and bending stiffness
-- Fundamental frequency for three spans × four end conditions
-- A sampling check flagging which results the MPU can't reach
+The current controlled data shows a clear change in average vibration as the bolt state changes. The larger loose-vs-secure differences are easier to see than the difference between 3 and 4 tightened bolts. More data is needed before a final threshold can be chosen.
 
-### Output as it stands
-
-```
-A      = 342.4 mm²
-ȳ      = 21.38 mm above the bottom
-I      = 166,448 mm⁴
-EI     = 33,290 N·m²
-mass   = 2.688 kg/m
-
-Whole 24 in track, simply supported : 470 Hz
-One 12 in rail, simply supported    : 1,882 Hz
-Between sleepers, simply supported  : 16,935 Hz
-```
-
-The maths is explained step by step in [docs/06-theory.md](../docs/06-theory.md),
-and why the result changed the plan is in [docs/PROBLEMS.md](../docs/PROBLEMS.md).
+There is also a recording/timing issue in one of the runs where not all accelerometer axes were captured for the entire test. That needs to be fixed before the next dataset is treated as final.
