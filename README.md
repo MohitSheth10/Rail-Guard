@@ -95,6 +95,16 @@ If the answer is no, I need to figure out why.
 
 ---
 
+## First look at the data
+
+With the clamped-board fix in, I ran the full test: three stationary baselines, then three one-minute runs at every bolt state from 0 through 4 bolts tightened, plus three runs with the fishplate removed entirely.
+
+![Vibration strength vs. number of bolts tightened](media/analysis_rms_by_state.png)
+
+The average vibration drops in a clean, consistent line as more bolts go in, and the three repeats at each state agree closely with each other. The gap between badly loose (0–1 bolts) and reasonably secure (3–4 bolts) is large and easy to see. The gap between 3 bolts and 4 bolts is not — smaller than the normal run-to-run noise, so the sensor can tell "loose" from "tight" but not yet "tight" from "perfectly tight." That's an early, encouraging sign for the core question above, not a final answer.
+
+---
+
 ## Why I'm interested in it
 
 Railway inspection already exists. There are dedicated inspection vehicles and other ways of checking track.
@@ -115,16 +125,16 @@ That's hard enough.
 
 I kept the messy parts of the project instead of deleting them. The calculations, failed tests, old data, wiring, photos, logbook and presentations are all in the repository.
 
-| Folder                                           | What's inside                                          |
+| Folder | What's inside |
 | ------------------------------------------------ | -------------------------------------------------------- |
-| [`analysis/`](analysis/)                         | Data collection and rail-frequency calculations        |
-| [`code/`](code/)                                 | ESP32 tests, data collection and experimental datasets |
-| [`docs/`](docs/)                                 | The actual design, theory, build process and problems  |
-| [`hardware/`](hardware/)                         | Schematics, drawings, BOM and 3D model                 |
-| [`logbook/`](logbook/)                           | My project logbook                                     |
-| [`media/`](media/)                               | Photos and videos                                       |
-| [`presentations/`](presentations/)               | Project presentations                                   |
-| [`specification_sheets/`](specification_sheets/) | Datasheets for the components                          |
+| [`analysis/`](analysis/) | Data collection and rail-frequency calculations |
+| [`code/`](code/) | ESP32 tests, data collection and experimental datasets |
+| [`docs/`](docs/) | The actual design, theory, build process and problems |
+| [`hardware/`](hardware/) | Schematics, drawings, BOM and 3D model |
+| [`logbook/`](logbook/) | My project logbook |
+| [`media/`](media/) | Photos and videos |
+| [`presentations/`](presentations/) | Project presentations |
+| [`specification_sheets/`](specification_sheets/) | Datasheets for the components |
 
 If you only have a few minutes, start here:
 
