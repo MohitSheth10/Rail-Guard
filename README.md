@@ -1,111 +1,89 @@
 # Rail-Guard
 
-**Mohit Sheth · Dhirubhai Ambani International School, Mumbai · DAIS × OMOTEC Innovation Programme**
-
-Rail-Guard is an early-warning system for railway track joints. It listens to the vibration a *fishplate joint* makes as a train rolls over it, and works out whether the bolts holding that joint together are loose — automatically, with nobody having to walk the track or tap anything.
+**Finding loose railway bolts by listening to how the track shakes.**
 
 ---
 
 ## Why I chose this
 
-A fishplate is the steel plate that clamps two rail ends together — four bolts per plate, eight per joint. Every train that passes shakes those bolts a little looser over time. The way this is checked today hasn't really changed in decades: a worker walks the track on foot and taps each bolt with a hammer, listening for the dull sound a loose one makes. It works, but it's slow and completely blind — the inspector has no way of knowing which bolt is loose until he's already standing on top of it.
+Rails come in fixed lengths. Where two lengths meet, they're joined by a **fishplate** -- a steel bar bolted across both rail ends, usually with four bolts, holding the joint in line so a wheel can cross it without dropping.
 
-The whole point of my project is to remove the tapping. If my system needed a person to go and tap each joint, it wouldn't be solving anything. So it has to work from the vibration a *normal passing train* already makes.
+Those bolts loosen over time. Trains pass, the joint flexes, and eventually a bolt backs off. A loose joint lets the two rail ends move independently, and joint failure is a known contributor to derailments. It's also slow to develop -- there's a real window where the problem exists before it becomes visible.
+
+Right now it's mostly found by eye or by hammer-tap: someone walks the section and checks it by hand. That works, but it's slow, and a given joint only gets checked every so often.
+
+**The idea:** put an accelerometer on the joint, use a motor to create repeatable vibration standing in for a passing train, and find out whether a tight joint and a loose joint actually vibrate differently enough to tell apart automatically.
+
+This is a bench-scale prototype, not a deployed railway system.
 
 ---
 
-## The idea, in one line
+## What I built
 
-**A bolted joint is like a guitar string.** Tighten a guitar string and it plays a higher note; loosen it and the note drops. A bolted joint does the same — a tight joint is stiff and vibrates cleanly, while a loose joint goes floppy and *rattles*. The worker with his hammer is really just listening to that change in pitch. I'm detecting the same thing with a sensor and some code, from train vibration instead of a hammer.
+A fabricated track section with one real bolted fishplate joint (steel T-section rails with a welded head plate), mounted on a plywood base, with a motor-driven mechanism standing in for a passing train.
+
+**Hardware:** ESP32-S3 Zero, MPU-6050/6500 accelerometer, HX711 amplifier + load cell (for future bolt-force sensing), microSD module, L298N motor driver -- soldered onto perfboard since vibration and loose jumper wires don't mix.
+
+**Software:** Arduino C++ firmware sampling the accelerometer at up to 1 kHz, a Python serial logger, and Python analysis tools that run an FFT on each capture and call the joint TIGHT or LOOSE.
 
 ---
 
-## How it works
+## The steps, the problems, and how the plan changed
 
-The system sits idle, watching the vibration level. When a train arrives, the vibration jumps — the system notices this on its own, wakes up, records a short burst from the sensor, and analyzes it. No button, no human.
+The full account is in [docs/PROBLEMS.md](docs/PROBLEMS.md); this is the short version.
 
-To analyze the burst I use an **FFT** (Fast Fourier Transform) — think of it as a machine that takes a messy mix of vibration and tells you which "wobble speeds" (frequencies) are inside it, and how strong each one is.
+**The rail steel didn't exist off the shelf.** Model railway track is moulded plastic; structural I-beams aren't shaped like a rail. I had 2-inch steel T-sections cut and a flat plate welded along the top to form the rail head -- which made the section asymmetric and meant working out the true centroid by hand before any beam calculation meant anything (worked through in [docs/06-theory.md](docs/06-theory.md)).
 
-Here's the part that took me a while to understand, and it's the core of the project:
+**The original plan couldn't work.** The first idea was to detect a loose bolt from a shift in the rail's own natural frequency. That calculation came out somewhere between roughly 470 Hz and 17 kHz depending on how the rail is supported -- and the accelerometer, sampling at about 1 kHz, can only trust readings up to about 500 Hz (Nyquist's limit). Most of what I'd planned to measure was outside what the sensor could actually see. So the target changed: not the rail's own ringing frequency, but how the *joint* itself moves when bolts are loose.
 
-- My motor spins at about 4000 RPM, which is roughly **67 shakes per second (67 Hz)**. That's the rhythm it *drives* the track at.
-- - A tight joint passes that vibration through cleanly — the FFT shows basically **one clean peak at 67 Hz**.
-  - - A loose joint **rattles**. Metal knocks against metal, which adds extra peaks at multiples of 67 Hz (134, 200, 268…). So a loose joint shows **67 Hz plus a mess of extra spikes**, and it usually lets *less* total vibration through.
-   
-    - So my two main clues for "loose vs tight" are **how much vibration gets through (RMS amplitude)** and **how messy/rattly the signal is (harmonic content)** — not just a single frequency. That mess is the fingerprint of a loose bolt.
-   
-    - ---
+**The sensor wasn't quite what the board claimed.** Reading the accelerometer's WHO_AM_I register returned `0x70`, not the `0x68` a true MPU-6050 should return -- the board is actually an MPU-6500, sold under the MPU-6050 name on the same GY-521 module. Mostly compatible, except the low-pass filter lives in a different register on each chip, so the firmware now checks the chip's identity at startup instead of assuming.
 
-    ## The model I'm building
+**A quieter problem: the whole board was moving.** Early readings looked plausible on their own but didn't add up to a clean tight-vs-loose story between runs. The plywood board itself was shifting slightly under its own vibration, so part of what the sensor picked up was the rig moving, not the joint. Fixed on **29 August** by clamping the board down. Every reading collected before that is kept in [code/Inaccurate Readings](code/Inaccurate%20Readings) for reference, not for conclusions; everything after goes into [code/Accurate Readings](code/Accurate%20Readings).
 
-    A model track roughly the length of a study table, with **one real fishplate joint I can loosen and tighten**. Everything that matters is **metal, not plastic** — plastic absorbs vibration instead of carrying it, so the signal I'm hunting simply wouldn't exist.
+**Finding a number that actually separates tight from loose.** The obvious candidates didn't hold up on their own: overall vibration loudness (RMS) can't tell a missing fishplate apart from a properly tightened joint -- their RMS ranges overlap. Picking "whichever single frequency is loudest" isn't reliable either, since most readings contain two frequencies close in strength (roughly 39 Hz and its ~79 Hz echo), and which one narrowly wins can flip between otherwise-identical readings. What held up: the *ratio* of vibration energy in the 30-60 Hz band to the 60-100 Hz band. Checked against every reading collected so far (0-4 bolts tight, the fishplate removed entirely, and stationary baselines), every 3-4-bolt reading scored below 0.30 and every not-secure reading scored above 0.38 -- a clean gap, with the working threshold set at 0.35. See [analysis/README.md](analysis/README.md) for the full reasoning.
 
-    | Part | Material |
-    |------|----------|
-    | Rails | Aluminum angle |
-    | Fishplate | Mild steel flat bar |
-    | Bolts | Steel M6 (loosened/tightened by a measured number of turns) |
-    | Sleepers / baseboard | Wood / MDF, on rubber feet |
+---
 
-    **The most important design decision:** the motor goes on **one** rail and the sensor on the **other** rail, across the joint from it. That forces the vibration to travel *through* the joint to reach the sensor — so the joint's condition directly controls what the sensor sees. It also mirrors real life: a train's wheels shake the rail, and that vibration has to cross the joint.
+## Where the project stands
 
-    ---
+| Part | Status |
+|---|---|
+| ESP32-S3 controller | Tested |
+| MicroSD logging | Tested |
+| MPU accelerometer | Tested, sampling verified |
+| Motor + L298N driver | Vibration confirmed; formal module test still pending |
+| HX711 + load cell | Soldered, not yet tested |
+| Natural-frequency calculation | Done -- the result that redirected the whole approach |
+| Board-drift systematic error | Found and fixed (29 Aug) |
+| Controlled dataset | Collected: 0-4 bolts tight, no-fishplate, stationary baselines, 3 reps each |
+| FFT + tight/loose analysis | Built and checked against the full dataset -- see `analysis/` |
+| Fine-grained bolt count (1 vs 2 vs 3) | Not yet reliable -- only 3 reps per state so far |
+| Live/real-time detection | Not built yet -- current tools run on saved recordings |
 
-    ## Hardware
+---
 
-    | Component | Role |
-    |-----------|------|
-    | ESP32-S3 Mini | Main controller (runs the FFT, has WiFi) |
-    | MPU-6050 accelerometer | Reads the joint's vibration over I²C |
-    | 775 DC 12V vibration motor + L298N driver | Simulates a passing train |
-    | XY-3606 buck converter | Steps 12V down to 5V |
-    | MicroSD module | Logs every reading |
-    | Green / red LEDs | Green = OK, Red = loose |
+## Everything, linked
 
-    I'm also testing a **piezo disc** as an alternative sensor, because it can pick up higher frequencies than the MPU-6050 — the two run side by side so I can compare them with real data instead of guessing.
+- [docs/](docs/) -- concept, design, build, electronics, software, theory, and every problem hit along the way
+- [analysis/](analysis/) -- the FFT tool and the tight/loose classifier, and how they work
+- [code/](code/) -- firmware tests, the data logger, and the experimental readings
+- [hardware/](hardware/) -- schematic, wiring, bill of materials, 3D model
+- [logbook/](logbook/) -- dated project logbook
+- [media/](media/) -- photos and video of the build
+- [presentations/](presentations/) -- project pitch deck
+- [specification_sheets/](specification_sheets/) -- component datasheets
 
-    ---
+---
 
-    ## Where I'm at right now
+## What's next
 
-    - Idea finalized, research done, bill of materials complete, parts received
-    - - ESP32-S3 talking to the accelerometer over I²C; first live readings working
-      - - SD card logging tested
-        - - Model track being built; motor wiring on the way
-          - - Next: capture bursts, run the FFT, and build the loosening curve (tight → loose, measured in bolt turns) that proves the concept
-           
-            - ---
+1. Collect more repeats per bolt state to test whether 1/2/3-bolt states can be told apart reliably, not just "secure vs. not"
+2. Decide whether live detection runs on a laptop watching the sensor stream, or gets built into the ESP32 firmware directly
+3. Test the HX711 + load cell and calibrate against known weights
+4. A clear tight/loose readout (LED or similar) once the detection logic is trusted
 
-            ## Scope (on purpose)
+---
 
-            Right now this is a **loose-bolt detector** — one clean, provable claim. Deliberately parked for later so I can do the core thing properly first:
+## Built with
 
-            - Over-tightening detection (the load cell / HX711 force sensing)
-            - - A live WiFi dashboard
-              - - A second fishplate joint for a side-by-side demo
-               
-                - ---
-
-                ## What I've learned so far
-
-                The hardware was the steep part. Getting usable data meant actually understanding I²C, sample rates, and why the sensor's own built-in filter was quietly deleting the exact high-frequency vibration I needed. The biggest lesson was about *frequencies* — realizing that my motor can't reach the joint's natural ringing frequency, so I had to detect looseness from rattling and transmitted energy instead. Working that out felt like the moment the project actually made sense.
-
-                ---
-
-                ## Repository structure
-
-                ```
-                Rail-Guard/
-                ├── README.md               — this overview
-                ├── analysis/               — Python scripts + data analysis
-                ├── code/                   — Arduino / ESP32 sketches
-                ├── hardware/               — block diagram, wiring, bill of materials
-                ├── docs/                   — write-ups, one per build stage
-                ├── logbook/                — dated session-by-session log
-                ├── media/                  — photos and videos of the build
-                ├── presentations/          — milestone slide decks
-                └── specification_sheets/   — component datasheets
-                ```
-
-                **File naming:** `RG_<stage>_<type>_<name>_v<version>` — e.g. `RG_S1_DOC_Research-Summary_v1.docx`, `RG_S4_VID_Bench-Test_v1.mp4`. Stages S1-S6 follow the build plan; milestones M1-M3 are the presentation checkpoints.
-                
+ESP32-S3 · MPU-6050/6500 accelerometer · HX711 + load cell · L298N motor driver · Arduino C++ · Python · mild steel, plywood, and a local welding shop
