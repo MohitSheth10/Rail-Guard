@@ -57,6 +57,21 @@ folder, pointing at this script wherever it lives):
 
 This script needs fft_analysis.py to sit in the same folder as this file --
 it reuses that script's loading, FFT, and ratio code rather than repeating it.
+
+EXPERIMENTAL bolt-count estimate:
+
+  On top of the proven TIGHT/LOOSE call above, this script also prints a
+  rough guess at exactly how many of the 4 bolts are tight (e.g. "1/4
+  bolts loose"). This is NOT as trustworthy as the TIGHT/LOOSE call --
+  it's built from only 3 repeat readings per bolt count, and the ranges
+  for 3-tight and 4-tight readings almost overlap (0.285-0.298 vs.
+  0.175-0.278), so that specific boundary is close to a coin flip right
+  now. The 0-vs-1, 1-vs-2, and 2-vs-3 boundaries have more room to them,
+  but still rest on only 3 readings each. Treat every bolt-count number
+  this script prints as a rough estimate to sanity-check by hand, not a
+  validated result -- collecting more repeats per bolt state is the way
+  to make this trustworthy. See BOLT_COUNT_BOUNDARIES below for the exact
+  numbers behind each estimate.
 """
 
 import sys
@@ -74,6 +89,31 @@ THRESHOLD = 0.35
 # treat it as a non-reading rather than guessing LOOSE or TIGHT.
 MIN_RMS = 1000
 
+# EXPERIMENTAL bolt-count boundaries -- see the module docstring above for
+# why these are rougher than THRESHOLD. Built from the midpoint between each
+# bolt count's observed ratio range:
+#   0 tight: 2.123-5.592   1 tight: 0.498-0.645   2 tight: 0.386-0.466
+#   3 tight: 0.285-0.298   4 tight: 0.175-0.278
+#
+# 3-tight and 4-tight almost overlap (0.285-0.298 vs. 0.175-0.278), so
+# rather than guess which of the two it is, anything below the 2-vs-3
+# boundary is reported as the combined "3-4 bolts tight" bucket -- that's
+# an honest read of what the data actually supports right now.
+BOLT_COUNT_BOUNDARIES = [
+    (1.384, "0 bolts tight (4 loose)"),
+    (0.482, "1 bolt tight (3 loose)"),
+    (0.342, "2 bolts tight (2 loose)"),
+]
+BOLT_COUNT_FALLBACK = "3-4 bolts tight (can't tell which -- see docstring)"
+
+
+def estimate_bolts_tight(ratio):
+    """Rough label for how many of the 4 bolts are tight."""
+    for boundary, label in BOLT_COUNT_BOUNDARIES:
+        if ratio > boundary:
+            return label
+    return BOLT_COUNT_FALLBACK
+
 
 def classify_file(path):
     mag, t_start, t_end, total_rows = load_and_trim(path)
@@ -81,6 +121,8 @@ def classify_file(path):
 
     rms = float(np.sqrt(np.mean(mag_c**2)))
     ratio = low_high_ratio(freqs, amp)
+
+    bolt_count_estimate = None
 
     if rms < MIN_RMS:
         verdict = "NOT ENOUGH VIBRATION"
@@ -92,11 +134,15 @@ def classify_file(path):
         verdict = "TIGHT" if ratio < THRESHOLD else "LOOSE"
         print(f"{path:30s}  rms = {rms:7.1f}  ratio = {ratio:7.3f}   ->   {verdict}")
 
+        bolt_count_estimate = estimate_bolts_tight(ratio)
+        print(f"{'':30s}  Bolt-count estimate (experimental): {bolt_count_estimate}")
+
     return {
         "file": path,
         "rms": round(rms, 1),
         "ratio": round(ratio, 3),
         "verdict": verdict,
+        "bolt_count_estimate": bolt_count_estimate,
     }
 
 
