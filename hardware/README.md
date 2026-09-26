@@ -34,7 +34,7 @@ The electronics are soldered onto perfboard rather than left on a breadboard, si
 |---|---|
 | [`schematic/`](schematic/) | As-built schematic and circuit photos |
 | [`wiring.drawio`](wiring.drawio) | Editable wiring diagram |
-| [`bill_of_materials.xlsx`](bill_of_materials.xlsx) | Parts list |
+| [`RailGuard_BOM_AsBuilt.xlsx`](RailGuard_BOM_AsBuilt.xlsx) | Parts list -- only what's in the final build, not everything purchased |
 | [`track_drawings.pdf`](track_drawings.pdf) | Track and joint drawings |
 | [`track_3d_model.html`](track_3d_model.html) | 3D model of the track |
 
