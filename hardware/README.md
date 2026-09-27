@@ -34,17 +34,15 @@ The electronics are soldered onto perfboard rather than left on a breadboard, si
 |---|---|
 | [`schematic/`](schematic/) | As-built schematic and circuit photos |
 | [`wiring.drawio`](wiring.drawio) | Editable wiring diagram |
-| [`RailGuard_BOM_AsBuilt.xlsx`](RailGuard_BOM_AsBuilt.xlsx) | Parts list -- only what's in the final build, not everything purchased |
+| [`RailGuard_BOM_AsBuilt.xlsx`](RailGuard_BOM_AsBuilt.xlsx) | Parts list — only what's in the final build, not everything purchased |
 | [`track_drawings.pdf`](track_drawings.pdf) | Track and joint drawings |
 | [`track_3d_model.html`](track_3d_model.html) | 3D model of the track |
 
 ## Current hardware status
 
 - Track and fishplate: built
-- Main electronics: assembled
+- Main electronics: assembled and soldered
 - Accelerometer: tested
 - SD card: tested
-- Motor vibration: confirmed during the first capture
-- Motor + L298N: formal module testing still needs to be completed
-- HX711 + load cell: soldered but not yet fully tested
-- Circuit box: still to be completed
+- Motor vibration: confirmed
+- HX711 + load cell: soldered, not yet calibrated — the project's future scope (see the [root README](../README.md))
