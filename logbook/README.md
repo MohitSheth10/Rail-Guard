@@ -10,7 +10,7 @@ Some ideas in the logbook were later changed or abandoned, so this is different 
 
 ### 27 September 2026
 
-Reworked the whole GPIO map before the next build pass. HX711 moves off a shared bus onto its own two pins — GPIO4 for DT, GPIO5 for SCK — instead of being wired like it was I2C. Added a second MPU ("Extra MPU") on GPIO6/7 as a backup/comparison sensor, separate from the main one on GPIO8/9. The SD card reader gets its own dedicated set of pins (GPIO10-13 for CS/MOSI/SCK/MISO), and the motor driver simplifies down to two control lines: GPIO2 for ENA and ENB together, GPIO3 for IN2 and IN3 together. Redrew the schematic to match before wiring anything up.
+Reworked the whole GPIO map before the next build pass. HX711 moves off a shared bus onto its own two pins — GPIO4 for DT, GPIO5 for SCK — instead of being wired like it was I2C. Added a second MPU ("Extra MPU") on GPIO6/7, separate from the main one on GPIO8/9 — wired in now for a future accuracy improvement, not part of the detection pipeline yet. The SD card reader gets its own dedicated set of pins (GPIO10-13 for CS/MOSI/SCK/MISO), and the motor driver simplifies down to two control lines: GPIO2 for ENA and ENB together, GPIO3 for IN2 and IN3 together. Redrew the schematic to match before wiring anything up.
 
 ### 20 September 2026
 
