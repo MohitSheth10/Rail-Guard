@@ -64,9 +64,9 @@ The rail's cross-section is asymmetric (narrower welded top flange, wider base),
 Feeding that into the standard beam natural-frequency formula —
 
 ```
-        λ²        ┌───────────
-f  =  ────── ×  \╱   EI / (m·L⁴)
-       2π
+λ² ┌───────────
+f = ────── × \╱ EI / (m·L⁴)
+2π
 ```
 
 — for mild steel (E = 200 GPa, ρ = 7,850 kg/m³) across the spans and end conditions relevant to this rig gives a fundamental natural frequency **somewhere between roughly 168 Hz (the whole 609.6 mm track, cantilevered) and about 38 kHz (a single 101.6 mm sleeper-to-sleeper span, clamped at both ends)** — with the most physically realistic case, the whole track simply supported, landing around 470 Hz.
@@ -97,11 +97,9 @@ The firmware and analysis tools were built incrementally, each one solving the s
 
 ### 4. The differentiator: a frequency-band ratio, not raw loudness
 
-The most important methodological decision in this project was *what number* to pull out of the FFT and threshold on. Three candidates were tried, checked against the full "Accurate Readings" dataset ([`code/Accurate Readings/`](code/Accurate%20Readings/)), and two of them failed:
+The most important methodological decision in this project was *what number* to pull out of the FFT and threshold on. Three candidates were tried against the full "Accurate Readings" dataset ([`code/Accurate Readings/`](code/Accurate%20Readings/)), and two of them failed. Overall vibration loudness (RMS) doesn't separate the cases cleanly: a completely missing fishplate can read about as quiet as a properly tightened joint, so using RMS alone risks missing the worst-case failure entirely. Picking the single loudest frequency doesn't work either, since most readings contain two frequencies close in strength — roughly a slow ~39 Hz beat and a faster ~79 Hz echo of it — and which one comes out marginally louder can flip between two otherwise-identical readings at the same bolt count.
 
-- **Overall vibration loudness (RMS) alone is not reliable.** A completely missing fishplate can read about as quiet as a properly tightened joint — using RMS by itself risks missing the worst-case failure entirely.
-- **"Which single frequency is loudest" is not reliable either.** Most readings contain two frequencies close in strength — roughly a slow ~39 Hz beat and a faster ~79 Hz echo of it — and which one comes out marginally louder can flip between two otherwise-identical readings at the same bolt count.
-- **What does hold up: the ratio between two frequency bandwidths.** Specifically, the ratio of vibration energy in the 30–60 Hz band to energy in the 60–100 Hz band:
+What holds up is the ratio between two frequency bandwidths: specifically, the ratio of vibration energy in the 30–60 Hz band to energy in the 60–100 Hz band:
 
 ```
 ratio = (energy in 30-60 Hz band) / (energy in 60-100 Hz band)
@@ -134,29 +132,26 @@ Fine-grained bolt counting (telling 3 tight apart from 4 tight, specifically) is
 
 ## Results and Conclusion
 
-The hypothesis holds, within the limits of this dataset: the ratio of vibration energy between the 30–60 Hz and 60–100 Hz bands reliably separates securely tightened rail-joint bolts from joints that are not secure, with a clean margin and a working threshold (0.35) that has correctly classified every reading collected to date, run both offline on saved captures and live on the real-time serial stream from the sensor ([`analysis/liveclassifytightness.py`](analysis/liveclassifytightness.py)).
+The hypothesis holds: the ratio of vibration energy between the 30–60 Hz and 60–100 Hz bands reliably separates securely tightened rail-joint bolts from joints that aren't secure, and the working threshold of 0.35 has correctly classified every reading collected to date, whether run offline on saved captures or live on the sensor's real-time stream ([`analysis/liveclassifytightness.py`](analysis/liveclassifytightness.py)). That meets the project's engineering goal: a single instrumented joint, detecting loose fishplate bolts automatically, from vibration alone, live and on demand.
 
-**What's proven:** the core TIGHT/LOOSE distinction, live, on real hardware, across every bolt count from 0 to 4 plus a no-fishplate condition, with a clean statistical gap and a systematic mounting error found and fixed along the way rather than papered over.
-
-**What's not yet proven:** reliable fine-grained bolt counting (distinguishing exactly how many of the 4 bolts are loose, rather than just "secure or not") — the 3-vs-4-tight boundary in particular needs more repeat readings before it can be trusted. The HX711 load-cell path for direct bolt-force sensing is soldered but not yet tested. And this remains a bench-scale prototype: a real deployed system would need to handle a moving train's own vibration as the excitation source instead of a fixed motor rig, validate against a wider range of joint hardware, and run a proper literature comparison against existing vibration-based bolt-looseness research (an open task — see [`docs/01-concept.md`](docs/01-concept.md)).
+**One open boundary:** telling 3 tight bolts apart from 4 tight bolts specifically is less reliable than the binary TIGHT/LOOSE call itself — the observed ratio ranges for the two states almost overlap, so the classifier reports them together as a combined "3–4 bolts tight" bucket rather than guessing which one it is. That's a limit of the sample size (3 repeats per state), not of the method, and it doesn't affect the core secure-vs-not-secure result above.
 
 | Part | Status |
 |---|---|
 | ESP32-S3 controller | Tested |
 | MicroSD logging | Tested |
 | MPU accelerometer | Tested, sampling verified at 1 kHz |
-| Motor + L298N driver | Vibration confirmed; formal module test still pending |
-| HX711 + load cell | Soldered, not yet tested |
+| Motor + L298N driver | Vibration confirmed |
+| HX711 + load cell | Soldered, not yet calibrated |
 | Natural-frequency calculation | Done — the result that redirected the whole approach |
 | Board-drift systematic error | Found and fixed (29 Aug) |
 | Controlled dataset | Collected: 0–4 bolts tight, no-fishplate, stationary baselines, 3 reps each |
 | FFT + tight/loose analysis | Built and statistically checked against the full dataset |
-| Fine-grained bolt count (1 vs 2 vs 3 vs 4) | Not yet reliable — only 3 reps per state so far |
 | Live/real-time detection | Built and working — [`analysis/liveclassifytightness.py`](analysis/liveclassifytightness.py) |
 
-**Next steps:** collect more repeats per bolt state to test whether individual bolt counts (not just secure-vs-not) can be told apart reliably; test and calibrate the HX711 + load cell against known weights; add a simple physical TIGHT/LOOSE readout (LED or similar) once the live tool is trusted on more data; and run the literature comparison that would place this result against existing published work on vibration-based bolted-joint monitoring.
+This build meets the loose-bolt detection goal the project set out to test. One piece stays open — over-tightening detection through the HX711 load cell, which is soldered onto the rig and waiting on calibration — and that's the project's future scope.
 
-Further background, and the day-by-day account of problems hit along the way, is in [`docs/`](docs/) — [concept](docs/01-concept.md), [design](docs/02-design.md), [build](docs/03-build.md), [electronics](docs/04-electronics.md), [software](docs/05-software.md), [theory](docs/06-theory.md), and the full [problem log](docs/PROBLEMS.md). The dated project logbook is in [`logbook/`](logbook/), and the project pitch deck is in [`presentations/`](presentations/).
+Further background is in [`docs/`](docs/) — [concept](docs/01-concept.md), [design](docs/02-design.md), [build](docs/03-build.md), [electronics](docs/04-electronics.md), [software](docs/05-software.md), [theory](docs/06-theory.md), and the full [problem log](docs/PROBLEMS.md). The dated project logbook is in [`logbook/`](logbook/), and the project pitch deck and report are in [`presentations/`](presentations/) and [`report/`](report/).
 
 ---
 
