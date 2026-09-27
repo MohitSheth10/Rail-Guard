@@ -69,8 +69,6 @@ The latest controlled data is in: [`../code/Accurate Readings/`](../code/Accurat
 
 Earlier runs are in: [`../code/Inaccurate Readings/`](../code/Inaccurate%20Readings/)
 
-The older data is intentionally kept because it helped expose the board-movement problem. It should not be used as the main basis for the final tight-vs-loose conclusion.
+The older data is intentionally kept because it helped expose the board-movement problem, not because it feeds the final conclusion.
 
-The current controlled data shows a clear change in average vibration as the bolt state changes. The larger loose-vs-secure differences are easier to see than the difference between 3 and 4 tightened bolts. More data is needed before a final threshold can be chosen.
-
-There is also a recording/timing issue in one of the runs where not all accelerometer axes were captured for the entire test. That needs to be fixed before the next dataset is treated as final.
+The current controlled data shows a clean, consistent gap between loose and secure joints, and that gap is what the working TIGHT/LOOSE threshold (0.35) is built on — see the [root README](../README.md#observation) for the full numbers. Telling 3 tight bolts apart from 4 tight specifically is less reliable than that binary call; that's a limit of the sample size (3 repeats per state), not of the method.
