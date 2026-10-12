@@ -25,6 +25,14 @@ A bench-scale prototype that puts an accelerometer on a bolted rail joint, shake
 - Tested on one bench joint, three recordings per condition. Telling 3 tight from 4 tight is not reliable, so they are reported together as "secure".
 - Data was recorded in August and September 2026.
 
+![Band ratio for every recording, by number of tight bolts](media/figures/band-ratio-by-bolt-count.png)
+
+*Each dot is one recording. The dashed line is the 0.35 threshold.*
+
+![How a recording becomes a TIGHT or LOOSE call](media/figures/pipeline-diagram.png)
+
+![Overall vibration strength by number of tight bolts](media/figures/vibration-strength-by-bolt-count.png)
+
 New here? Read this page top to bottom, then open [`docs/`](docs/) for the deeper write-ups.
 
 ---
