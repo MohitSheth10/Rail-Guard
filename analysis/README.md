@@ -41,7 +41,7 @@ Set the board's COM port at the top of the file before running it.
 
 The first proper capture showed a quiet signal while the setup was stationary and a clear increase in vibration when the motor started. That confirmed that the basic chain — sensor → ESP32 → computer → CSV — was actually working. It did not prove that the system could distinguish a tight joint from a loose one. That is what the controlled dataset is for.
 
-This `daq.py` is the simpler, earlier version of the logger. The one actually used to collect the datasets in `code/Accurate Readings/` and `code/Inaccurate Readings/` is [`code/daq.py`](../code/daq.py), which added stall detection and rate checking against the ESP32's own timing. See [`code/README.md`](../code/README.md) for how the two differ.
+This `daq.py` is the simpler, earlier version of the logger. The one actually used to collect the datasets in `code/Accurate Readings/` is [`code/daq.py`](../code/daq.py), which added stall detection and rate checking against the ESP32's own timing. See [`code/README.md`](../code/README.md) for how the two differ.
 
 ## `natural_frequency.py`
 
@@ -67,8 +67,5 @@ The detailed working and reasoning are in [`docs/06-theory.md`](../docs/06-theor
 
 The latest controlled data is in: [`../code/Accurate Readings/`](../code/Accurate%20Readings/)
 
-Earlier runs are in: [`../code/Inaccurate Readings/`](../code/Inaccurate%20Readings/)
-
-The older data is intentionally kept because it helped expose the board-movement problem, not because it feeds the final conclusion.
 
 The current controlled data shows a clean, consistent gap between loose and secure joints, and that gap is what the working TIGHT/LOOSE threshold (0.35) is built on — see the [root README](../README.md#observation) for the full numbers. Telling 3 tight bolts apart from 4 tight specifically is less reliable than that binary call; that's a limit of the sample size (3 repeats per state), not of the method.
