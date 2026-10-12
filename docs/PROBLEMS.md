@@ -60,7 +60,7 @@ I don't quietly forget and present a guess as a result.
 ## The model is too heavy to carry
 
 Mild steel, two rails, plus a plywood base. It's solid, which is good for the
-physics and bad for getting it to school. Carrying it in and back every week isn't
+physics and bad for moving around. Carrying it back and forth every week isn't
 realistic, so it needs somewhere to live.
 
 Not a technical problem, but it's shaped the schedule more than most technical
