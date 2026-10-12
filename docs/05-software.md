@@ -22,12 +22,7 @@ bring-up sketch. Reads the accelerometer twice a second over the original GPIO 6
 wiring and prints it. Useless for vibration analysis, but it's the right first
 thing to run when checking whether a sensor is alive at all. Kept for that.
 
-**Note on this file:** the actual 1000 Hz capture firmware — the sketch that
-streams timestamped samples to the ESP32's serial port at close to 1000 Hz for
-[`daq.py`](../code/daq.py) to log — is not currently checked into this repository,
-only this earlier basic-test sketch is. That capture firmware exists on the device
-Mohit builds with but hasn't been added here yet. Adding it is on the to-do list
-below.
+The 1000 Hz capture firmware that streams timestamped samples to the serial port is [`code/mpu6050_1khz_stream/`](../code/mpu6050_1khz_stream/mpu6050_1khz_stream.ino) (see the sketch description in the main README).
 
 ## SD card test
 
@@ -37,7 +32,7 @@ below.
 ## Data capture (Python side)
 
 [`code/daq.py`](../code/daq.py) is the script actually used to record the datasets
-in `code/Accurate Readings/` and `code/Inaccurate Readings/`. It reads the
+in `code/Accurate Readings/`. It reads the
 ESP32's serial stream and saves it to a timestamped CSV, using the ESP32's own
 `micros()` timestamps as the timing reference and watching for stalled or
 off-rate sampling as it records. [`analysis/daq.py`](../analysis/daq.py) is an
