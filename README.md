@@ -6,6 +6,29 @@ A bench-scale prototype that puts an accelerometer on a bolted rail joint, shake
 
 ---
 
+## Where to find things
+
+| Folder | What is in it |
+|---|---|
+| [`analysis/`](analysis/) | Python scripts: FFT, classifier, statistics, natural-frequency check, and the live TIGHT/LOOSE display |
+| [`code/`](code/) | ESP32 firmware (1 kHz sensor stream), the data logger, and the recorded data |
+| [`code/Accurate Readings/`](code/Accurate%20Readings/) | The datasets: 0-4 bolts tight, no fishplate, and motor-off baselines |
+| [`docs/`](docs/) | Plain-English write-ups, from concept to theory, plus the problem log |
+| [`hardware/`](hardware/) | Parts list, schematic, wiring, track drawings and 3D model |
+| [`media/`](media/) | Photos and videos of the build and the tests |
+| [`specification_sheets/`](specification_sheets/) | Datasheets for the main components |
+
+## Results at a glance
+
+- A threshold of **0.35** on the 30-60 Hz / 60-100 Hz energy ratio classified **all 18** controlled recordings correctly (6 tight, 12 loose).
+- Three or four tight bolts: ratio **0.175-0.298**. Zero to two tight bolts or no fishplate: ratio **0.386-5.592**.
+- Tested on one bench joint, three recordings per condition. Telling 3 tight from 4 tight is not reliable, so they are reported together as "secure".
+- Data was recorded in August and September 2026.
+
+New here? Read this page top to bottom, then open [`docs/`](docs/) for the deeper write-ups.
+
+---
+
 ## Problem Statement
 
 Rails come in fixed lengths. Where two lengths meet, they're joined by a **fishplate** — a steel bar bolted across both rail ends, usually with four bolts, holding the joint in line so a wheel can cross it without dropping.
@@ -97,7 +120,7 @@ The firmware and analysis tools were built incrementally, each one solving the s
 
 ### 4. The differentiator: a frequency-band ratio, not raw loudness
 
-The most important methodological decision in this project was *what number* to pull out of the FFT and threshold on. Three candidates were tried against the full "Accurate Readings" dataset ([`code/Accurate Readings/`](code/Accurate%20Readings/)), and two of them failed. Overall vibration loudness (RMS) doesn't separate the cases cleanly: a completely missing fishplate can read about as quiet as a properly tightened joint, so using RMS alone risks missing the worst-case failure entirely. Picking the single loudest frequency doesn't work either, since most readings contain two frequencies close in strength — roughly a slow ~39 Hz beat and a faster ~79 Hz echo of it — and which one comes out marginally louder can flip between two otherwise-identical readings at the same bolt count.
+The most important methodological decision in this project was *what number* to pull out of the FFT and threshold on. Three candidates were tried against the full "Accurate Readings" dataset ([`code/Accurate Readings/`](code/Accurate%20Readings/)), and two of them failed. Overall vibration strength (RMS) does fall as bolts are tightened, but the gap between the loudest tight reading (11,033) and the quietest loose reading (11,253) is only about 2%, which is too thin to trust as a threshold. Picking the single loudest frequency doesn't work either, since most readings contain two frequencies close in strength — roughly a slow ~39 Hz beat and a faster ~79 Hz echo of it — and which one comes out marginally louder can flip between two otherwise-identical readings at the same bolt count.
 
 What holds up is the ratio between two frequency bandwidths: specifically, the ratio of vibration energy in the 30–60 Hz band to energy in the 60–100 Hz band:
 
@@ -109,7 +132,7 @@ A securely tightened joint is more rigidly coupled and puts most of its shake in
 
 ### 5. Finding and fixing a systematic error
 
-Early readings, even after settling on the ratio approach, didn't add up to a clean story between runs. The cause turned out to be mechanical, not analytical: the plywood base itself was shifting slightly under its own vibration, so part of what the sensor picked up was the *whole rig* moving, not the joint. This was found and fixed on **29 August** by clamping the board down. Every reading collected before that fix is kept in [`code/Inaccurate Readings/`](code/Inaccurate%20Readings/) for reference and transparency, not for conclusions — several of those files are visibly corrupted or empty, documenting the bug rather than hiding it. Every reading used in the actual analysis and results below comes from [`code/Accurate Readings/`](code/Accurate%20Readings/), collected after the fix.
+Early readings, even after settling on the ratio approach, didn't add up to a clean story between runs. The cause turned out to be mechanical, not analytical: the plywood base itself was shifting slightly under its own vibration, so part of what the sensor picked up was the *whole rig* moving, not the joint. This was found and fixed on **29 August** by clamping the board down. Readings taken before that fix were discarded and play no part in the analysis. Every reading used in the actual analysis and results below comes from [`code/Accurate Readings/`](code/Accurate%20Readings/), collected after the fix.
 
 ---
 
@@ -122,7 +145,7 @@ Running the 30–60 Hz / 60–100 Hz ratio (Section 4 above) across every readin
 - **Every 3–4 bolt (secure) reading scored below 0.30.**
 - **Every not-secure reading (0–2 bolts, or no fishplate) scored above 0.38.**
 - That's a clean, unambiguous gap with room to spare on both sides — the working TIGHT/LOOSE threshold was set at **0.35**, right in the middle of it.
-- Vibrating readings consistently scored **well above ~6,000 RMS**; a stationary, motor-off reading scored around **36 RMS** — three orders of magnitude apart, which is why a simple RMS floor (`MIN_RMS`) is enough to reliably flag "not enough vibration to judge" before attempting a TIGHT/LOOSE call at all.
+- Every vibrating reading had an RMS of at least about 10,300 counts, while the motor-off recordings read only about 47-70, so a simple RMS floor (`MIN_RMS`) reliably flags "not enough vibration to judge" before any TIGHT/LOOSE call is attempted.
 
 The statistical check ([`analysis/statistical_analysis.py`](analysis/statistical_analysis.py)) confirms this separation is a real, group-level effect and not coincidence — but it's honest about the limits of only 3 repeats per bolt count. With n=3 per group, a pairwise Mann-Whitney U test mathematically cannot produce a p-value below 0.1, no matter how separated the groups actually are — there simply aren't enough possible orderings of 3-vs-3 data for anything stronger. That is a sample-size limit, not a failure of the detection method, and the overall pattern (group means ordered 0 > 1 > 2 > 3–4, with little to no overlap in ranges) is the more honest evidence.
 
@@ -151,7 +174,7 @@ The hypothesis holds: the ratio of vibration energy between the 30–60 Hz and 6
 
 This build meets the loose-bolt detection goal the project set out to test. One piece stays open — over-tightening detection through the HX711 load cell, which is soldered onto the rig and waiting on calibration — and that's the project's future scope.
 
-Further background is in [`docs/`](docs/) — [concept](docs/01-concept.md), [design](docs/02-design.md), [build](docs/03-build.md), [electronics](docs/04-electronics.md), [software](docs/05-software.md), [theory](docs/06-theory.md), and the full [problem log](docs/PROBLEMS.md). The dated project logbook is in [`logbook/`](logbook/), and the project pitch deck and report are in [`presentations/`](presentations/) and [`report/`](report/).
+Further background is in [`docs/`](docs/): concept, design, build, electronics, software, theory, and the full problem log.
 
 ---
 
