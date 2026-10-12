@@ -6,6 +6,10 @@ A bench-scale prototype that puts an accelerometer on a bolted rail joint, shake
 
 ---
 
+## About me
+
+I'm an IB Diploma Programme student. Before Rail-Guard, I built a world from nothing: an online development community that grew to 700 members. For 100+ people it became more than just a server: a place to belong, with its own story, events and rules. I lead 30+ staff, teaching them how to run it, and together we keep building and developing the community: host setup, Discord setup, role configuration, debugging and more. Rail-Guard comes from the same instinct: find a real problem, build the thing, and lead people toward making it work.
+
 ## Where to find things
 
 | Folder | What is in it |
