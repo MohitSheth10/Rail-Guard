@@ -4,6 +4,8 @@
 
 A bench-scale prototype that puts an accelerometer on a bolted rail joint, shakes the joint with a motor standing in for a passing train, and decides — automatically, from the vibration signal alone — whether the joint is securely bolted or not.
 
+
+**In plain terms:** I built a bench-scale rail joint with a sensor on it, recorded how it vibrates with 0 to 4 bolts tight, and wrote software that calls the joint TIGHT or LOOSE live from the vibration alone. It classified all 18 controlled test recordings correctly. Submitted to IRIS.
 ---
 
 ## Where to find things
