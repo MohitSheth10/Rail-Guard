@@ -2,6 +2,8 @@
 
 **Finding loose railway bolts by listening to how the track shakes.**
 
+More by Mohit: [AURA Humanoid](https://github.com/MohitSheth10/Humanoid-Bot) · [Soul Sync](https://github.com/MohitSheth10/Soul-Sync) · [Quorum](https://github.com/MohitSheth10/Quorum) · [All projects](https://github.com/MohitSheth10?tab=repositories)
+
 A bench-scale prototype that puts an accelerometer on a bolted rail joint, shakes the joint with a motor standing in for a passing train, and decides — automatically, from the vibration signal alone — whether the joint is securely bolted or not.
 
 
