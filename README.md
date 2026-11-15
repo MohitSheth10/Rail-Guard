@@ -7,7 +7,7 @@ More by Mohit: [AURA Humanoid](https://github.com/MohitSheth10/Humanoid-Bot) · 
 A bench-scale prototype that puts an accelerometer on a bolted rail joint, shakes the joint with a motor standing in for a passing train, and decides — automatically, from the vibration signal alone — whether the joint is securely bolted or not.
 
 
-**In plain terms:** I designed and built this alone. I put a sensor on a bench-scale rail joint, recorded how it vibrates with 0 to 4 bolts tight, and wrote software that calls the joint TIGHT or LOOSE live from the vibration alone. The test data supported the hypothesis, which points to a possible real-world use. Submitted to IRIS.
+**In plain terms:** I designed and built this alone. I put a sensor on a bench-scale rail joint, recorded how it vibrates with 0 to 4 bolts tight, and wrote software that calls the joint TIGHT or LOOSE live from the vibration alone. The test data supported the hypothesis, which points to a possible real-world use.
 
 ---
 
